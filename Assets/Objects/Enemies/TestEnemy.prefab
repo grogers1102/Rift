@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 5906024661438548468}
   - component: {fileID: 2117705632398451544}
   - component: {fileID: 1707419199199408604}
-  - component: {fileID: 2541213805371604398}
+  - component: {fileID: 3467246756703710364}
+  - component: {fileID: 2309735680971011190}
   m_Layer: 0
   m_Name: TestEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87,7 +88,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2541213805371604398
+--- !u!65 &3467246756703710364
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,5 +107,18 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.0007977, y: 1.0157976, z: 1.0164957}
+  m_Center: {x: -0.00039970875, y: -0.0078988075, z: -0.003}
+--- !u!114 &2309735680971011190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376606489427486140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60abbd51c5b936d48a82791002c61ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 1376606489427486140}
