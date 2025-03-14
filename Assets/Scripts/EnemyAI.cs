@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -6,16 +7,28 @@ public class EnemyAI : MonoBehaviour
     public GameObject playerObj;
     Transform player;
     public float detectionRange;
+    public float movementSpeed;
+    public float turnSpeed;
     void Start()
     {
-        player = playerObj.transform; //Update to accurate player name
+        player = playerObj.transform; 
     }
 
     void Update()
     {
-        //Add unique behavior
-        isFront();
-        inLineOfSight();
+        if(isFront() && inLineOfSight()){
+            Vector3 targetDireciton = player.position - transform.position;
+            float turnStep = turnSpeed * Time.deltaTime;
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDireciton, turnStep, 0.0f);
+            transform.rotation = Quaternion.LookRotation(newDirection);
+            float moveStep = movementSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, player.position, moveStep);
+            if (Vector3.Distance(transform.position, player.position) < 1f){
+                moveStep = 0;
+            }
+        }
+        //isFront();
+        //inLineOfSight();
     }
     bool isFront(){
         Vector3 directionOfPlayer = transform.position - player.position;
