@@ -70,7 +70,7 @@
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\Scripts\RifleAnimatorController.cs" />
+    <Compile Include="Assets\Scripts\RifleAnimator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
