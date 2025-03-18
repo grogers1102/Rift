@@ -836,10 +836,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AssaultRifle
       objectReference: {fileID: 0}
-    - target: {fileID: 6026346110428381197, guid: 07042ca83942d2d47b641183765ed990, type: 3}
-      propertyPath: m_Layer
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 6406987808653990583, guid: 07042ca83942d2d47b641183765ed990, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.53
@@ -879,10 +875,6 @@ PrefabInstance:
     - target: {fileID: 6406987808653990583, guid: 07042ca83942d2d47b641183765ed990, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8263566425782860836, guid: 07042ca83942d2d47b641183765ed990, type: 3}
-      propertyPath: m_Layer
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

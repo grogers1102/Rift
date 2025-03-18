@@ -9,7 +9,7 @@ public class WeaponInfo : MonoBehaviour
     public int maxAmmo;
     public bool isAutomatic;
     public float fireRate;
-    public float reloadTime;
+    public float reloadSpeed;
     public int bulletDamage;
     public int meleeDamage;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
