@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyHealthController : MonoBehaviour
 {
-    public double health = 10;
+    public float health = 10;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,7 +14,7 @@ public class EnemyHealthController : MonoBehaviour
     {
         
     }
-    public void DamageToHealth(int dmg)
+    public void DamageToHealth(float dmg)
     {
         health -= dmg;
         if (health <= 0)
