@@ -17,13 +17,8 @@ public class RifleAnimator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R) && info.isMelee == false){
             //Reload
-            //animator.SetBool("isReloading", true);
             animator.SetTrigger("Reload");
-            //GetComponent<Animation>().Play("Magazine|MagazineAction_001");
         }
-        /*else{
-            animator.SetBool("isReloading", false);
-        }*/
         if (Input.GetKeyDown(KeyCode.Mouse0) && info.isMelee == true){
             //Firing
         }
