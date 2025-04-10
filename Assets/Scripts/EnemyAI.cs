@@ -10,6 +10,8 @@ public class EnemyAI : MonoBehaviour
     public Transform Player;
     public NavMeshAgent navMeshAgent;
     public Animator Anim;
+    public float isRange;
+    public float isMelee;
     /*public GameObject playerObj;
     Transform player;
     public float detectionRange = 50;
@@ -28,6 +30,12 @@ public class EnemyAI : MonoBehaviour
         distance = Vector3.Distance(this.transform.position, Player.position);
         if(distance < 10){
             navMeshAgent.destination = Player.position;
+        }
+        if(distance <= 3){
+            navMeshAgent.isStopped = true;
+        }
+        else{
+            navMeshAgent.isStopped = false;
         }
     }
     /*
