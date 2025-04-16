@@ -128,6 +128,8 @@ MonoBehaviour:
   Player: {fileID: 0}
   navMeshAgent: {fileID: 1759531348229513157}
   Anim: {fileID: 0}
+  isRange: 0
+  isMelee: 1
 --- !u!195 &1759531348229513157
 NavMeshAgent:
   m_ObjectHideFlags: 0

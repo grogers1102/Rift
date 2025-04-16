@@ -10,8 +10,8 @@ public class EnemyAI : MonoBehaviour
     public Transform Player;
     public NavMeshAgent navMeshAgent;
     public Animator Anim;
-    public float isRange;
-    public float isMelee;
+    public bool isRange;
+    public bool isMelee;
     /*public GameObject playerObj;
     Transform player;
     public float detectionRange = 50;

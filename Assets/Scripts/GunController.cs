@@ -10,7 +10,7 @@ public class GunController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class GunController : MonoBehaviour
             if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, weapon.range))
             {
                 Debug.Log(hit.transform.name);
-
+                nextTimeToFire += 1.0f / weapon.fireRate;
                 // Apply damage if the object has a health script
                 EnemyHealthController enemy = hit.transform.GetComponent<EnemyHealthController>();
                 if (enemy != null)

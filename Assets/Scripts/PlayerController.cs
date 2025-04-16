@@ -1,25 +1,28 @@
 using UnityEngine;
+//using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
     public float lookSpeed = 1.5f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Camera playerCamera;
     void Start()
     {
+        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.freezeRotation = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        float xMouseMovement = Input.GetAxis("Mouse X");
-        float yMouseMovement = Input.GetAxis("Mouse Y");
-        transform.eulerAngles += lookSpeed * new Vector3(-yMouseMovement, xMouseMovement, 0);
-
+        // Movement logic
         Vector3 forward = transform.forward;
         forward.y = 0;
-
         Vector3 right = transform.right;
         right.y = 0;
 
@@ -41,6 +44,7 @@ public class PlayerController : MonoBehaviour
         {
             direction += right;
         }
+        
         transform.position += direction.normalized * speed * Time.deltaTime;
     }
 }
