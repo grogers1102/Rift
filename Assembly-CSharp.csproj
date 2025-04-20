@@ -65,16 +65,25 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\WeaponInfo.cs" />
+    <Compile Include="Assets\Scripts\Level\SaveData.cs" />
     <Compile Include="Assets\Scripts\EnemyAI.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\Weapons\GunController.cs" />
+    <Compile Include="Assets\Scripts\Weapons\WeaponSwitchController.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelData.cs" />
+    <Compile Include="Assets\Scripts\Level\SaveManager.cs" />
+    <Compile Include="Assets\Scripts\Player\MainCamera.cs" />
+    <Compile Include="Assets\Scripts\Weapons\RifleAnimator.cs" />
+    <Compile Include="Assets\Scripts\Weapons\BaseWeapon.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthController.cs" />
-    <Compile Include="Assets\Scripts\WeaponSwitchController.cs" />
+    <Compile Include="Assets\Scripts\PlayerHUD.cs" />
+    <Compile Include="Assets\Scripts\Level\TransitionManager.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\Scripts\WeaponFollowCamera.cs" />
-    <Compile Include="Assets\Scripts\RifleAnimator.cs" />
-    <Compile Include="Assets\Scripts\GunController.cs" />
+    <Compile Include="Assets\Scripts\Weapons\WeaponFollowCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Weapons\WeaponInfo.cs" />
+    <Compile Include="Assets\Scripts\Weapons\MeleeController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
