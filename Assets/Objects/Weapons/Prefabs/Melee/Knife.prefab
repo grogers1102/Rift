@@ -115,7 +115,7 @@ Transform:
   m_GameObject: {fileID: 6493781654723459785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 1.9176, y: 2.351, z: -4.2925}
+  m_LocalPosition: {x: 1.923, y: 2.342, z: -4.373}
   m_LocalScale: {x: 0.3457386, y: 0.3457386, z: 0.3457386}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -166,7 +166,7 @@ MonoBehaviour:
   reloadSpeed: 0
   bulletDamage: 0
   meleeDamage: 30
-  attackRate: 10
+  attackRate: 30
 --- !u!114 &8490150057679362223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,4 +185,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   nextTimeToAttack: 0
-  playerAnimator: {fileID: 0}
+  comboWindow: 5

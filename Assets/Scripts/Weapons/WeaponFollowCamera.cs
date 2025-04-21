@@ -2,25 +2,26 @@ using UnityEngine;
 
 public class WeaponFollowCamera : MonoBehaviour
 {
-    private Camera targetCamera;
+    private Transform targetAnchor;
     public float smoothSpeed = 10f;
 
     private void Start()
     {
-        // Find the main camera at runtime
-        targetCamera = Camera.main;
-        if (targetCamera == null)
+        // Find the gun anchor in the parent hierarchy
+        targetAnchor = transform.parent;
+        if (targetAnchor == null)
         {
-            Debug.LogError("Main camera not found! Make sure your camera is tagged as 'MainCamera'");
+            Debug.LogError("WeaponFollowCamera needs to be a child of the weapon anchor!");
         }
     }
 
     void LateUpdate()
     {
-        if (targetCamera != null)
+        if (targetAnchor != null)
         {
-            transform.position = Vector3.Lerp(transform.position, targetCamera.transform.position, smoothSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetCamera.transform.rotation, smoothSpeed * Time.deltaTime);
+            // Follow the anchor's position and rotation
+            transform.position = Vector3.Lerp(transform.position, targetAnchor.position, smoothSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetAnchor.rotation, smoothSpeed * Time.deltaTime);
         }
     }
 }

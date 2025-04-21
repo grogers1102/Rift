@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 3631848639144687595}
   - component: {fileID: 7950537431526347022}
   - component: {fileID: 1596550600677306446}
+  - component: {fileID: -1787870785840252605}
   m_Layer: 0
   m_Name: LaserRifle
   m_TagString: Untagged
@@ -61,7 +62,7 @@ Transform:
   m_GameObject: {fileID: 3481328217021213686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3114554, y: 2.8342566, z: -3.049288}
+  m_LocalPosition: {x: 1.843, y: 2.897, z: -4.095}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -132,7 +133,6 @@ MonoBehaviour:
   muzzleFlash: {fileID: 0}
   nextTimeToFire: 0.5
   currentAmmo: 30
-  fpsCamera: {fileID: 0}
 --- !u!114 &1596550600677306446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,8 +145,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7c467e249868742a006daa92fa6029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   smoothSpeed: 10
+--- !u!114 &-1787870785840252605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3481328217021213686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fdb432493e4f6b41ac286f24bd63b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info: {fileID: 3631848639144687595}
 --- !u!1 &5300729224206234376
 GameObject:
   m_ObjectHideFlags: 0

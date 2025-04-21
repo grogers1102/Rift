@@ -37,14 +37,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private CharacterController controller;
-    private Animator animator;
+    public Animator animator;
     private Vector3 moveDirection;
     private Vector3 currentVelocity;
     private bool isRolling = false;
     private bool isAttacking = false;
     private bool isReloading = false;
+    private WeaponSwitchController weaponSwitchController;
 
-    void Start()
+    private void Start()
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -59,6 +60,10 @@ public class PlayerController : MonoBehaviour
         if (animator != null)
         {
             animator.SetLayerWeight(lowerBodyLayerIndex, 1f);
+        }
+        else
+        {
+            Debug.LogError("Player Animator not found on Player GameObject!");
         }
 
         // Setup camera if not assigned
@@ -76,20 +81,28 @@ public class PlayerController : MonoBehaviour
                 cameraController.playerBody = transform;
             }
         }
+
+        weaponSwitchController = GetComponent<WeaponSwitchController>();
     }
 
     void Update()
     {
+        Debug.Log("Update called");
         HandleMovement();
-        HandleActions();
-        HandleComboTimer();
+        HandleRolling();
         HandleHealing();
         HandleReloading();
+        HandleComboTimer();
+        UpdateEquippedWeapon();
     }
 
     void HandleMovement()
     {
-        if (isRolling || isAttacking || isReloading) return;
+        if (isRolling || isAttacking || isReloading)
+        {
+            Debug.Log($"Movement blocked - isRolling: {isRolling}, isAttacking: {isAttacking}, isReloading: {isReloading}");
+            return;
+        }
 
         // Get input
         float h = Input.GetAxisRaw("Horizontal");
@@ -99,6 +112,8 @@ public class PlayerController : MonoBehaviour
         bool isMoving = input.magnitude > 0f;
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
         float targetSpeed = isRunning ? runSpeed : walkSpeed;
+
+        Debug.Log($"Input - h: {h}, v: {v}, isMoving: {isMoving}, isRunning: {isRunning}");
 
         if (isMoving)
         {
@@ -147,30 +162,17 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", speedPercent);
             animator.SetBool("isWalking", isMoving && !isRunning);
             animator.SetBool("isRunning", isMoving && isRunning);
+            
+            Debug.Log($"Movement - Speed: {speedPercent}, isWalking: {isMoving && !isRunning}, isRunning: {isMoving && isRunning}");
+        }
+        else
+        {
+            Debug.LogWarning("Animator is null in HandleMovement!");
         }
     }
 
-    void HandleActions()
+    void HandleRolling()
     {
-        if (animator == null) return;
-
-        // Attack input (left click)
-        if (Input.GetMouseButtonDown(0) && !isAttacking && !isReloading)
-        {
-            isAttacking = true;
-            currentCombo++;
-
-            if (currentCombo > maxCombo)
-                currentCombo = 1;
-
-            animator.SetInteger("combo", currentCombo);
-            animator.SetTrigger("isAttacking");
-            
-            // Reset attack state after animation completes
-            Invoke("ResetAttack", 0.5f);
-        }
-
-        // Roll input (space bar)
         if (Input.GetKeyDown(KeyCode.Space) && !isRolling && !isAttacking && !isReloading)
         {
             StartCoroutine(HandleDodgeRoll());
@@ -219,11 +221,6 @@ public class PlayerController : MonoBehaviour
         isReloading = false;
     }
 
-    void ResetAttack()
-    {
-        isAttacking = false;
-    }
-
     IEnumerator HandleDodgeRoll()
     {
         isRolling = true;
@@ -255,5 +252,80 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    void UpdateEquippedWeapon()
+    {
+        if (animator == null) return;
+
+        WeaponInfo currentWeapon = weaponSwitchController.GetCurrentWeaponInfo();
+        if (currentWeapon == null) return;
+
+        // Set equippedWeapon based on weapon type
+        if (!currentWeapon.isMelee)
+        {
+            // Gun
+            animator.SetInteger("equippedWeapon", 1);
+        }
+        else
+        {
+            // Melee weapons
+            switch (currentWeapon.weaponName.ToLower())
+            {
+                case "knife":
+                    animator.SetInteger("equippedWeapon", 2);
+                    break;
+                case "sword":
+                    animator.SetInteger("equippedWeapon", 3);
+                    break;
+                default:
+                    animator.SetInteger("equippedWeapon", 0); // Default/unequipped
+                    break;
+            }
+        }
+    }
+
+    public void PerformMeleeAttack(int comboCount)
+    {
+        if (animator == null) return;
+
+        // Get the current weapon info
+        WeaponInfo currentWeapon = weaponSwitchController.GetCurrentWeaponInfo();
+        if (currentWeapon == null || !currentWeapon.isMelee) return;
+
+        // Update combo state
+        currentCombo = comboCount;
+        comboTimer = 0f;
+
+        Debug.Log($"Attempting to play attack animation. Weapon: {currentWeapon.weaponName}, Combo: {comboCount}");
+
+        // Set the combo value
+        animator.SetInteger("combo", comboCount);
+        
+        // Trigger the attack
+        animator.ResetTrigger("isAttacking");
+        animator.SetTrigger("isAttacking");
+        Debug.Log($"Playing attack animation with combo: {comboCount}");
+
+        // Set attacking state
+        isAttacking = true;
+        Invoke("ResetAttack", 0.5f); // Reset after animation duration
+    }
+
+    void ResetAttack()
+    {
+        isAttacking = false;
+    }
+
+    private bool HasAnimation(string animationName)
+    {
+        if (animator == null) return false;
+
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == animationName)
+                return true;
+        }
+        return false;
     }
 }

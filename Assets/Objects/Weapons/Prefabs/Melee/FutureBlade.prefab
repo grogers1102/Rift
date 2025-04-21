@@ -79,7 +79,7 @@ MonoBehaviour:
   reloadSpeed: 0
   bulletDamage: 0
   meleeDamage: 60
-  attackRate: 5
+  attackRate: 20
 --- !u!114 &5731560209803864479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,7 +98,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   nextTimeToAttack: 0
-  playerAnimator: {fileID: 0}
+  comboWindow: 5
 --- !u!1001 &1011971353059135393
 PrefabInstance:
   m_ObjectHideFlags: 0

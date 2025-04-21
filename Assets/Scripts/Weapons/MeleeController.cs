@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class MeleeController : BaseWeapon
 {
@@ -6,22 +7,30 @@ public class MeleeController : BaseWeapon
     public Collider attackCollider;
     public LayerMask enemyLayer;
     public float nextTimeToAttack = 0f;
-    public Animator playerAnimator; // Reference to the player's animator
+    public float comboWindow = 0.5f; // Time window to perform the next attack in the combo
+    private float lastAttackTime = 0f;
+    private int comboCount = 0; // Start at 0 for no attack
+    private PlayerController playerController;
 
     protected override void Start()
     {
         base.Start();
-        // Find the player's animator if not set
-        if (playerAnimator == null)
+
+        // Find the player controller
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            playerAnimator = GetComponentInParent<Animator>();
-            if (playerAnimator == null)
+            playerController = player.GetComponent<PlayerController>();
+            if (playerController == null)
             {
-                Debug.LogWarning("Player Animator not found for " + gameObject.name);
+                Debug.LogWarning("PlayerController not found on player GameObject!");
             }
         }
+        else
+        {
+            Debug.LogWarning("Player GameObject not found! Make sure it has the 'Player' tag.");
+        }
 
-        // Disable the attack collider by default
         if (attackCollider != null)
         {
             attackCollider.enabled = false;
@@ -30,6 +39,24 @@ public class MeleeController : BaseWeapon
 
     private void Update()
     {
+        // Check if we're in an attack animation
+        bool isInAttackAnimation = false;
+        if (playerController != null && playerController.animator != null)
+        {
+            AnimatorStateInfo stateInfo = playerController.animator.GetCurrentAnimatorStateInfo(0);
+            isInAttackAnimation = stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2");
+            
+            // If we're not in an attack animation and enough time has passed, reset the combo
+            if (!isInAttackAnimation && Time.time - lastAttackTime > comboWindow)
+            {
+                if (comboCount != 0)
+                {
+                    Debug.Log("Combo reset due to time window");
+                    comboCount = 0;
+                }
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextTimeToAttack && CanUse())
         {
             Attack();
@@ -39,35 +66,40 @@ public class MeleeController : BaseWeapon
     private void Attack()
     {
         nextTimeToAttack = Time.time + 1f / weaponInfo.attackRate;
-        
-        // Trigger the player's attack animation
-        if (playerAnimator != null)
+        lastAttackTime = Time.time;
+
+        if (playerController != null)
         {
-            // Use weapon archetype to determine which attack animation to play
-            switch (weaponInfo.weaponArchitype.ToLower())
+            // Only increment combo if we're not at max combo
+            if (comboCount < 2)
             {
-                case "sword":
-                    playerAnimator.SetTrigger("SwordAttack");
-                    break;
-                case "axe":
-                    playerAnimator.SetTrigger("AxeAttack");
-                    break;
-                case "dagger":
-                    playerAnimator.SetTrigger("DaggerAttack");
-                    break;
-                default:
-                    playerAnimator.SetTrigger("MeleeAttack");
-                    break;
+                comboCount++;
             }
+            else
+            {
+                // If we're at max combo, reset to 1 to start a new combo
+                comboCount = 1;
+            }
+            
+            Debug.Log($"Starting attack with combo: {comboCount}");
+            playerController.PerformMeleeAttack(comboCount);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerController is null!");
         }
 
-        // Enable the attack collider
         if (attackCollider != null)
         {
             attackCollider.enabled = true;
-            // Disable after a short time (adjust based on your animation length)
-            Invoke(nameof(DisableAttackCollider), 0.2f);
+            StartCoroutine(DisableColliderAfterDelay(0.2f)); // You can tweak timing
         }
+    }
+
+    private IEnumerator DisableColliderAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        DisableAttackCollider();
     }
 
     private void DisableAttackCollider()
@@ -80,10 +112,8 @@ public class MeleeController : BaseWeapon
 
     private void OnTriggerEnter(Collider other)
     {
-        // Only check for hits when the collider is enabled (during attack)
         if (attackCollider != null && attackCollider.enabled)
         {
-            // Check if the collided object is on the enemy layer
             if (((1 << other.gameObject.layer) & enemyLayer) != 0)
             {
                 EnemyHealthController enemyHealth = other.GetComponent<EnemyHealthController>();
@@ -94,4 +124,4 @@ public class MeleeController : BaseWeapon
             }
         }
     }
-} 
+}

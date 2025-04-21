@@ -4903,7 +4903,8 @@ GameObject:
   - component: {fileID: 2093794725971006275}
   - component: {fileID: 6780026172583974894}
   - component: {fileID: 2947385794587075863}
-  - component: {fileID: 4897871645542171833}
+  - component: {fileID: -703442708161235978}
+  - component: {fileID: -8423211437071515908}
   m_Layer: 0
   m_Name: AssaultRifle
   m_TagString: Untagged
@@ -4920,7 +4921,7 @@ Transform:
   m_GameObject: {fileID: 1121462459580641375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1870828, y: 1.5941366, z: -4.2272644}
+  m_LocalPosition: {x: 1.72, y: 1.619, z: -4.728}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4991,7 +4992,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 1419053584390555057}
   nextTimeToFire: 0.5
   currentAmmo: 30
---- !u!114 &4897871645542171833
+--- !u!114 &-703442708161235978
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5003,8 +5004,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7c467e249868742a006daa92fa6029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   smoothSpeed: 10
+--- !u!114 &-8423211437071515908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121462459580641375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fdb432493e4f6b41ac286f24bd63b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info: {fileID: 6780026172583974894}
 --- !u!1 &1652150935672127951
 GameObject:
   m_ObjectHideFlags: 0
