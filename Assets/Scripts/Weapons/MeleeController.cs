@@ -10,25 +10,34 @@ public class MeleeController : BaseWeapon
     public float comboWindow = 0.5f; // Time window to perform the next attack in the combo
     private float lastAttackTime = 0f;
     private int comboCount = 0; // Start at 0 for no attack
-    private PlayerController playerController;
+
+    [Header("References")]
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private CombatFeedback combatFeedback;
+    [SerializeField] private ParticleSystem hitEffect;
 
     protected override void Start()
     {
         base.Start();
 
-        // Find the player controller
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        // Find the player controller if not set in inspector
+        if (playerController == null)
         {
-            playerController = player.GetComponent<PlayerController>();
-            if (playerController == null)
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
             {
-                Debug.LogWarning("PlayerController not found on player GameObject!");
+                playerController = player.GetComponent<PlayerController>();
+            }
+            else
+            {
+                Debug.LogError("Player GameObject not found! Make sure it has the 'Player' tag.");
             }
         }
-        else
+
+        // Find combat feedback if not set in inspector
+        if (combatFeedback == null && playerController != null)
         {
-            Debug.LogWarning("Player GameObject not found! Make sure it has the 'Player' tag.");
+            combatFeedback = playerController.GetComponent<CombatFeedback>();
         }
 
         if (attackCollider != null)
@@ -116,10 +125,23 @@ public class MeleeController : BaseWeapon
         {
             if (((1 << other.gameObject.layer) & enemyLayer) != 0)
             {
-                EnemyHealthController enemyHealth = other.GetComponent<EnemyHealthController>();
-                if (enemyHealth != null)
+                EnemyHealthController enemy = other.GetComponent<EnemyHealthController>();
+                if (enemy != null)
                 {
-                    enemyHealth.DamageToHealth(weaponInfo.meleeDamage);
+                    // Show combat feedback at hit point
+                    if (combatFeedback != null)
+                    {
+                        combatFeedback.ShowHitMarker(other.ClosestPoint(transform.position));
+                    }
+
+                    // Apply damage
+                    enemy.TakeDamage(weaponInfo.meleeDamage);
+
+                    // Play hit effect
+                    if (hitEffect != null)
+                    {
+                        hitEffect.Play();
+                    }
                 }
             }
         }

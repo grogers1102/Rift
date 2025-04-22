@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -14,6 +15,10 @@ public class PlayerController : MonoBehaviour
     public Camera playerCamera;
     public FirstPersonLook cameraController;
 
+    [Header("Animation Settings")]
+    [SerializeField] private int upperBodyLayerIndex = 2;
+    [SerializeField] private int lowerBodyLayerIndex = 1;
+
     [Header("Attack Settings")]
     public int maxCombo = 2;
     private int currentCombo = 0;
@@ -22,7 +27,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Rolling Settings")]
     [SerializeField] private float rollDuration = 0.7f;
-    [SerializeField] private int lowerBodyLayerIndex = 1;
 
     [Header("Health Settings")]
     public float maxHealth = 100f;
@@ -30,6 +34,10 @@ public class PlayerController : MonoBehaviour
     public float healAmount = 25f;
     public int maxHeals = 3;
     private int remainingHeals;
+
+    [Header("Stamina Settings")]
+    public bool isRunning = false;
+    private PlayerStaminaController staminaController;
 
     public void SetHeals(int amount)
     {
@@ -56,14 +64,11 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         
-        // Make sure lower body layer starts enabled
+        // Setup animation layers
         if (animator != null)
         {
             animator.SetLayerWeight(lowerBodyLayerIndex, 1f);
-        }
-        else
-        {
-            Debug.LogError("Player Animator not found on Player GameObject!");
+            animator.SetLayerWeight(upperBodyLayerIndex, 1f);
         }
 
         // Setup camera if not assigned
@@ -83,11 +88,11 @@ public class PlayerController : MonoBehaviour
         }
 
         weaponSwitchController = GetComponent<WeaponSwitchController>();
+        staminaController = GetComponent<PlayerStaminaController>();
     }
 
     void Update()
     {
-        Debug.Log("Update called");
         HandleMovement();
         HandleRolling();
         HandleHealing();
@@ -98,22 +103,27 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        if (isRolling || isAttacking || isReloading)
-        {
-            Debug.Log($"Movement blocked - isRolling: {isRolling}, isAttacking: {isAttacking}, isReloading: {isReloading}");
-            return;
-        }
-
         // Get input
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Vector3 input = new Vector3(h, 0, v).normalized;
 
         bool isMoving = input.magnitude > 0f;
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        isRunning = Input.GetKey(KeyCode.LeftShift);
+        
+        // Only allow running if we have stamina
+        if (isRunning && staminaController != null && !staminaController.CanPerformAction(staminaController.runCostPerSecond * Time.deltaTime))
+        {
+            isRunning = false;
+        }
+
         float targetSpeed = isRunning ? runSpeed : walkSpeed;
 
-        Debug.Log($"Input - h: {h}, v: {v}, isMoving: {isMoving}, isRunning: {isRunning}");
+        // If rolling, reduce movement speed
+        if (isRolling)
+        {
+            targetSpeed *= 0.5f; // Reduce speed during roll
+        }
 
         if (isMoving)
         {
@@ -163,19 +173,21 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isWalking", isMoving && !isRunning);
             animator.SetBool("isRunning", isMoving && isRunning);
             
-            Debug.Log($"Movement - Speed: {speedPercent}, isWalking: {isMoving && !isRunning}, isRunning: {isMoving && isRunning}");
-        }
-        else
-        {
-            Debug.LogWarning("Animator is null in HandleMovement!");
         }
     }
 
     void HandleRolling()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isRolling && !isAttacking && !isReloading)
+        if (Input.GetKeyDown(KeyCode.Space) && !isRolling)
         {
-            StartCoroutine(HandleDodgeRoll());
+            if (staminaController == null || staminaController.CanPerformAction(staminaController.rollCost))
+            {
+                StartCoroutine(HandleDodgeRoll());
+                if (staminaController != null)
+                {
+                    staminaController.OnRoll();
+                }
+            }
         }
     }
 
@@ -205,7 +217,6 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetTrigger("isHealing");
             }
-            Debug.Log($"Healed! Current health: {currentHealth}. Remaining heals: {remainingHeals}");
         }
     }
 
@@ -214,6 +225,8 @@ public class PlayerController : MonoBehaviour
         isReloading = true;
         if (animator != null)
         {
+            // Set reload animation on upper body layer
+            animator.SetLayerWeight(upperBodyLayerIndex, 1f);
             animator.SetTrigger("isReloading");
         }
         // Wait for reload animation to complete
@@ -224,16 +237,22 @@ public class PlayerController : MonoBehaviour
     IEnumerator HandleDodgeRoll()
     {
         isRolling = true;
-        animator.SetTrigger("isRolling");
-
-        // Disable lower body layer during roll
+        
+        // Store current layer weights
+        float lowerBodyWeight = animator.GetLayerWeight(lowerBodyLayerIndex);
+        float upperBodyWeight = animator.GetLayerWeight(upperBodyLayerIndex);
+        
+        // Disable both layers during roll
         animator.SetLayerWeight(lowerBodyLayerIndex, 0f);
+        animator.SetLayerWeight(upperBodyLayerIndex, 0f);
+        animator.SetTrigger("isRolling");
 
         // Wait for roll animation to complete
         yield return new WaitForSeconds(rollDuration);
 
-        // Re-enable lower body layer
-        animator.SetLayerWeight(lowerBodyLayerIndex, 1f);
+        // Re-enable both layers with their original weights
+        animator.SetLayerWeight(lowerBodyLayerIndex, lowerBodyWeight);
+        animator.SetLayerWeight(upperBodyLayerIndex, upperBodyWeight);
         isRolling = false;
     }
 
@@ -248,7 +267,7 @@ public class PlayerController : MonoBehaviour
                 comboTimer = 0f;
                 if (animator != null)
                 {
-                    animator.SetInteger("combo", 0);
+                    animator.SetInteger("combo", currentCombo);
                 }
             }
         }
@@ -256,7 +275,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateEquippedWeapon()
     {
-        if (animator == null) return;
+        if (weaponSwitchController == null) return;
 
         WeaponInfo currentWeapon = weaponSwitchController.GetCurrentWeaponInfo();
         if (currentWeapon == null) return;
@@ -283,49 +302,152 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
+
+        // Handle weapon-specific inputs
+        if (Input.GetMouseButtonDown(0) && !isReloading && !isRolling)
+        {
+            if (currentWeapon.isMelee)
+            {
+                PerformMeleeAttack(currentCombo);
+            }
+            else
+            {
+                // Handle gun shooting logic here
+            }
+        }
     }
 
     public void PerformMeleeAttack(int comboCount)
     {
-        if (animator == null) return;
+        if (isAttacking || isRolling) return;
+        if (staminaController != null && !staminaController.CanPerformAction(staminaController.meleeAttackCost)) return;
 
-        // Get the current weapon info
-        WeaponInfo currentWeapon = weaponSwitchController.GetCurrentWeaponInfo();
-        if (currentWeapon == null || !currentWeapon.isMelee) return;
-
-        // Update combo state
-        currentCombo = comboCount;
+        isAttacking = true;
+        currentCombo = Mathf.Min(comboCount + 1, maxCombo);
         comboTimer = 0f;
 
-        Debug.Log($"Attempting to play attack animation. Weapon: {currentWeapon.weaponName}, Combo: {comboCount}");
+        if (staminaController != null)
+        {
+            staminaController.OnMeleeAttack();
+        }
 
-        // Set the combo value
-        animator.SetInteger("combo", comboCount);
-        
-        // Trigger the attack
-        animator.ResetTrigger("isAttacking");
-        animator.SetTrigger("isAttacking");
-        Debug.Log($"Playing attack animation with combo: {comboCount}");
+        if (animator != null)
+        {
+            // Set attack animation on upper body layer
+            animator.SetLayerWeight(upperBodyLayerIndex, 1f);
+            animator.SetInteger("combo", currentCombo);
+            animator.SetTrigger("isAttacking");
+        }
 
-        // Set attacking state
-        isAttacking = true;
-        Invoke("ResetAttack", 0.5f); // Reset after animation duration
+        // Reset attack state after animation
+        StartCoroutine(ResetAttackAfterDelay(0.5f)); // Adjust time based on your attack animation length
     }
 
-    void ResetAttack()
+    IEnumerator ResetAttackAfterDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
         isAttacking = false;
     }
 
     private bool HasAnimation(string animationName)
     {
         if (animator == null) return false;
+        return animator.HasState(0, Animator.StringToHash(animationName));
+    }
+}
 
-        foreach (AnimatorControllerParameter param in animator.parameters)
+public class PlayerStaminaController : MonoBehaviour
+{
+    [Header("Stamina Settings")]
+    public float maxStamina = 100f;
+    public float currentStamina;
+    public float staminaRegenRate = 10f;
+    public float staminaRegenDelay = 2f;
+
+    [Header("Action Costs")]
+    public float rollCost = 25f;
+    public float runCostPerSecond = 10f;
+    public float meleeAttackCost = 15f;
+    public float gunShotCost = 10f;
+
+    [Header("UI Elements")]
+    public Slider staminaSlider;
+    public Image staminaFill;
+    public Color normalColor = Color.green;
+    public Color lowColor = Color.red;
+    public float lowStaminaThreshold = 25f;
+
+    private float lastActionTime;
+    private bool isRegenerating = false;
+    private PlayerController playerController;
+
+    private void Start()
+    {
+        currentStamina = maxStamina;
+        playerController = GetComponent<PlayerController>();
+        UpdateStaminaUI();
+    }
+
+    private void Update()
+    {
+        if (Time.time - lastActionTime >= staminaRegenDelay && currentStamina < maxStamina)
         {
-            if (param.name == animationName)
-                return true;
+            currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
+            UpdateStaminaUI();
         }
-        return false;
+
+        if (playerController != null && playerController.isRunning)
+        {
+            UseStamina(runCostPerSecond * Time.deltaTime);
+        }
+    }
+
+    public bool CanPerformAction(float cost)
+    {
+        return currentStamina >= cost;
+    }
+
+    public void UseStamina(float amount)
+    {
+        currentStamina = Mathf.Max(0, currentStamina - amount);
+        lastActionTime = Time.time;
+        UpdateStaminaUI();
+    }
+
+    public void OnRoll()
+    {
+        if (CanPerformAction(rollCost))
+        {
+            UseStamina(rollCost);
+        }
+    }
+
+    public void OnMeleeAttack()
+    {
+        if (CanPerformAction(meleeAttackCost))
+        {
+            UseStamina(meleeAttackCost);
+        }
+    }
+
+    public void OnGunShot()
+    {
+        if (CanPerformAction(gunShotCost))
+        {
+            UseStamina(gunShotCost);
+        }
+    }
+
+    private void UpdateStaminaUI()
+    {
+        if (staminaSlider != null)
+        {
+            staminaSlider.value = currentStamina / maxStamina;
+        }
+
+        if (staminaFill != null)
+        {
+            staminaFill.color = currentStamina <= lowStaminaThreshold ? lowColor : normalColor;
+        }
     }
 }

@@ -66,24 +66,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Level\SaveData.cs" />
-    <Compile Include="Assets\Scripts\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Weapons\GunController.cs" />
+    <Compile Include="Assets\Scripts\Enemies\EnemyHealthController.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponSwitchController.cs" />
+    <Compile Include="Assets\Scripts\Effects\HitEffect.cs" />
     <Compile Include="Assets\Scripts\Level\LevelData.cs" />
     <Compile Include="Assets\Scripts\Level\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Player\MainCamera.cs" />
     <Compile Include="Assets\Scripts\Weapons\RifleAnimator.cs" />
     <Compile Include="Assets\Scripts\Weapons\BaseWeapon.cs" />
-    <Compile Include="Assets\Scripts\EnemyHealthController.cs" />
-    <Compile Include="Assets\Scripts\PlayerHUD.cs" />
     <Compile Include="Assets\Scripts\Level\TransitionManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponFollowCamera.cs" />
+    <Compile Include="Assets\Scripts\Player\CombatFeedback.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerHUD.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponInfo.cs" />
+    <Compile Include="Assets\Scripts\Enemies\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Weapons\MeleeController.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerHealthController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

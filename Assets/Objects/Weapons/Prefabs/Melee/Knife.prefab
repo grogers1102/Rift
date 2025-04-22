@@ -166,7 +166,7 @@ MonoBehaviour:
   reloadSpeed: 0
   bulletDamage: 0
   meleeDamage: 30
-  attackRate: 30
+  attackRate: 140
 --- !u!114 &8490150057679362223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,3 +186,6 @@ MonoBehaviour:
     m_Bits: 64
   nextTimeToAttack: 0
   comboWindow: 5
+  playerController: {fileID: 0}
+  combatFeedback: {fileID: 0}
+  hitEffect: {fileID: 0}
