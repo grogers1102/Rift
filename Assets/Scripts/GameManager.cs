@@ -23,4 +23,11 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void PlayerDied()
+    {
+        // Handle player death (e.g., show game over screen, restart level, etc.)
+        Debug.Log("Player has died!");
+        // Add your game over logic here
+    }
 }
