@@ -19,7 +19,7 @@ public class RifleAnimator : MonoBehaviour
             //Reload
             animator.SetTrigger("Reload");
         }
-        if (Input.GetKeyDown(KeyCode.Mouse0) && info.isMelee == true){
+        if (Input.GetKeyDown(KeyCode.Mouse0) && info.isMelee == false){
             //Firing
         }
         else{

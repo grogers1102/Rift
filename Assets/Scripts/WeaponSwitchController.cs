@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class WeaponSwitchController : MonoBehaviour
 {
+    //public GunController currentWeapon; 
     public int selectedWeapon = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -12,6 +13,7 @@ public class WeaponSwitchController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //currentWeapon = transform.GetChild(selectedWeapon).gameObject.GetComponent<GunController>;
         int previousWeapon = selectedWeapon;
         for (int i = 0; i < transform.childCount; i++)
         {
