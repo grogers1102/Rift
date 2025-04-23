@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GunController : BaseWeapon
@@ -11,7 +12,7 @@ public class GunController : BaseWeapon
     private PlayerStaminaController staminaController;
     private CombatFeedback combatFeedback;
 
-    private void Start()
+    protected override void Start ()
     {
         base.Start();
         currentAmmo = weaponInfo.magSize;

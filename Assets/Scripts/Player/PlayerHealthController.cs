@@ -124,10 +124,9 @@ public class PlayerHealthController : MonoBehaviour
         }
 
         // Notify GameManager
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        if (gameManager != null)
+        if (GameManager.instance != null)
         {
-            gameManager.PlayerDied();
+            GameManager.instance.PlayerDied();
         }
 
         // Destroy after delay to allow effects to play
