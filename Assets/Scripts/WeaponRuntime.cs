@@ -15,10 +15,4 @@ public class WeaponRuntime : MonoBehaviour
         currentTotalAmmo = info.maxAmmo;
         weaponName = info.weaponName;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

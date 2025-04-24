@@ -6,9 +6,14 @@ using UnityEngine.Rendering;
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("NavMesh")]
     public float distance;
     public Transform Player;
     public NavMeshAgent navMeshAgent;
+    [Header("Patrolling")]
+    public Transform[] waypoints;
+    private int currentWaypointIndex = 0;
+    [Header("Enemy Behavior")]
     public Animator Anim;
     public bool isRange;
     public bool isMelee;
@@ -20,22 +25,28 @@ public class EnemyAI : MonoBehaviour
     private bool isChasing = false;
     public float stopDistance = 1f;
     public float resumeDistance = 1.5f;*/
-
-    void Start()
-    {
-        
-    }
     void Update()
     {
         distance = Vector3.Distance(this.transform.position, Player.position);
         if(distance < 10){
             navMeshAgent.destination = Player.position;
-        }
-        if(distance <= 3){
-            navMeshAgent.isStopped = true;
+            if(distance <= 3){
+                navMeshAgent.isStopped = true;
+            }
+            else{
+                navMeshAgent.isStopped = false;
+            }
         }
         else{
-            navMeshAgent.isStopped = false;
+            OnPatrol();
+        }
+    }
+    
+    private void OnPatrol(){
+        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
+        {
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            navMeshAgent.destination = waypoints[currentWaypointIndex].position;
         }
     }
     /*

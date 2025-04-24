@@ -4905,6 +4905,7 @@ GameObject:
   - component: {fileID: 2947385794587075863}
   - component: {fileID: -703442708161235978}
   - component: {fileID: -8423211437071515908}
+  - component: {fileID: -3189188961172356688}
   m_Layer: 0
   m_Name: AssaultRifle
   m_TagString: Untagged
@@ -4921,7 +4922,7 @@ Transform:
   m_GameObject: {fileID: 1121462459580641375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.72, y: 1.619, z: -4.728}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5018,6 +5019,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info: {fileID: 6780026172583974894}
+--- !u!114 &-3189188961172356688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121462459580641375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ffdd8916e641e4ca2598fd0f09a3f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentMagAmmo: 0
+  currentTotalAmmo: 0
+  weaponName: 
 --- !u!1 &1652150935672127951
 GameObject:
   m_ObjectHideFlags: 0
