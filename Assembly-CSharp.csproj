@@ -59,7 +59,7 @@
     <UnityVersion>6000.0.35f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Users\beech\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.1.1\Analyzers\Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="C:\Users\User\.vscode\extensions\visualstudiotoolsforunity.vstuc-1.1.1\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
@@ -69,18 +69,18 @@
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\CFX_Demo_RotateCamera.cs" />
     <Compile Include="Assets\Scripts\Level\SaveData.cs" />
     <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
-    <Compile Include="Assets\Scripts\WeaponRuntime.cs" />
+    <Compile Include="Assets\Scripts\Enemies\EnemyHealthBillboard.cs" />
     <Compile Include="Assets\Scripts\Weapons\GunController.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyHealthController.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Scripts\CFX_LightIntensityFade.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponSwitchController.cs" />
     <Compile Include="Assets\Scripts\Effects\HitEffect.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Scripts\WFX_LightFlicker.cs" />
     <Compile Include="Assets\Scripts\Level\LevelData.cs" />
     <Compile Include="Assets\Scripts\Level\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Player\MainCamera.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\WFX_Demo_Wall.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerStaminaController.cs" />
     <Compile Include="Assets\Scripts\Weapons\RifleAnimator.cs" />
     <Compile Include="Assets\Scripts\Weapons\BaseWeapon.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Scripts\CFX_AutoDestructShuriken.cs" />
@@ -92,14 +92,12 @@
     <Compile Include="Assets\Scripts\Weapons\WeaponFollowCamera.cs" />
     <Compile Include="Assets\Scripts\Player\CombatFeedback.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHUD.cs" />
-    <Compile Include="Assets\Scripts\WeaponHolder.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\WFX_Demo_DeleteAfterDelay.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\WFX_Demo_New.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\CFX_Demo_Translate.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponInfo.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyAI.cs" />
-    <Compile Include="Assets\Scripts\Weapon.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\CFX_Demo_RandomDir.cs" />
     <Compile Include="Assets\Scripts\Weapons\MeleeController.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Spawn System\CFX_SpawnSystem.cs" />

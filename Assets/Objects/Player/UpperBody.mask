@@ -7,5 +7,117 @@ AvatarMask:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: UpperBody
-  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000001000000010000000100000001000000
-  m_Elements: []
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Camera
+    m_Weight: 1
+  - m_Path: Human
+    m_Weight: 1
+  - m_Path: HumanArmature
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Neck
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Neck/Head
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Neck/Head/Head_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/BackThumb.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/BackThumb.L/FrontThumb.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/BackThumb.L/FrontThumb.L/FrontThumb.L_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandIndexBack.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandIndexBack.L/HandIndexMiddle.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandIndexBack.L/HandIndexMiddle.L/HandIndexFront.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandIndexBack.L/HandIndexMiddle.L/HandIndexFront.L/HandIndexFront.L_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandMiddleBack.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandMiddleBack.L/HandMiddleMiddle.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandMiddleBack.L/HandMiddleMiddle.L/HandMiddleFront.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandMiddleBack.L/HandMiddleMiddle.L/HandMiddleFront.L/HandMiddleFront.L_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandPinkySideBack.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandPinkySideBack.L/HandPinkySideMiddle.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandPinkySideBack.L/HandPinkySideMiddle.L/HandPinkySideFront.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.L/UpperArm.L/LowerArm.L/HandPinkySideBack.L/HandPinkySideMiddle.L/HandPinkySideFront.L/HandPinkySideFront.L_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/BackThumb.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/BackThumb.R/FrontThumb.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/BackThumb.R/FrontThumb.R/FrontThumb.R_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandIndexBack.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandIndexBack.R/HandIndexMiddle.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandIndexBack.R/HandIndexMiddle.R/HandIndexFront.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandIndexBack.R/HandIndexMiddle.R/HandIndexFront.R/HandIndexFront.R_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandMiddleBack.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandMiddleBack.R/HandMiddleMiddle.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandMiddleBack.R/HandMiddleMiddle.R/HandMiddleFront.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandMiddleBack.R/HandMiddleMiddle.R/HandMiddleFront.R/HandMiddleFront.R_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandPinkySideBack.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandPinkySideBack.R/HandPinkySideMiddle.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandPinkySideBack.R/HandPinkySideMiddle.R/HandPinkySideFront.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/Stomach/Chest/Shoulder.R/UpperArm.R/LowerArm.R/HandPinkySideBack.R/HandPinkySideMiddle.R/HandPinkySideFront.R/HandPinkySideFront.R_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.L/LowerLeg.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.L/LowerLeg.L/BackFoot.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.L/LowerLeg.L/BackFoot.L/FrontFoot.L
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.L/LowerLeg.L/BackFoot.L/FrontFoot.L/FrontFoot.L_end
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.R/LowerLeg.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.R/LowerLeg.R/BackFoot.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.R/LowerLeg.R/BackFoot.R/FrontFoot.R
+    m_Weight: 1
+  - m_Path: HumanArmature/Pelvis/UpperLeg.R/LowerLeg.R/BackFoot.R/FrontFoot.R/FrontFoot.R_end
+    m_Weight: 1
