@@ -69,6 +69,7 @@
     <Compile Include="Assets\JMO Assets\WarFX\Demo\Assets\CFX_Demo_RotateCamera.cs" />
     <Compile Include="Assets\Scripts\Level\SaveData.cs" />
     <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\WeaponRuntime.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyHealthBillboard.cs" />
     <Compile Include="Assets\Scripts\Weapons\GunController.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyHealthController.cs" />

@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 7950537431526347022}
   - component: {fileID: 1596550600677306446}
   - component: {fileID: -1787870785840252605}
-  - component: {fileID: 8923495390744207340}
   m_Layer: 0
   m_Name: LaserRifle
   m_TagString: Untagged
@@ -131,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponInfo: {fileID: 3631848639144687595}
   muzzlePoint: {fileID: 8585380805263565653}
-  muzzleFlash: {fileID: 0}
+  muzzleFlash: {fileID: 6063452457736384307}
   nextTimeToFire: 0.5
   currentAmmo: 30
 --- !u!114 &1596550600677306446
@@ -160,21 +159,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info: {fileID: 3631848639144687595}
---- !u!114 &8923495390744207340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3481328217021213686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ffdd8916e641e4ca2598fd0f09a3f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentMagAmmo: 0
-  currentTotalAmmo: 0
-  weaponName: 
 --- !u!1 &5300729224206234376
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public float lookSpeed = 1.5f;
     public float acceleration = 20f;
     public float deceleration = 15f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 1f;
     public Camera playerCamera;
     public FirstPersonLook cameraController;
 
@@ -55,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool isRolling = false;
     private bool isAttacking = false;
     private bool isReloading = false;
+    private float verticalVelocity = 0f;
+    private bool isGrounded;
 
     private void Start()
     {
@@ -62,6 +66,9 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
         remainingHeals = maxHeals;
+        
+        // Reset vertical velocity
+        verticalVelocity = 0f;
         
         // Camera and cursor setup
         Cursor.visible = false;
@@ -119,6 +126,13 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
+        // Check if grounded
+        isGrounded = controller.isGrounded;
+        if (isGrounded && verticalVelocity < 0)
+        {
+            verticalVelocity = -2f; // Small negative value to keep grounded
+        }
+
         // Get input
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -178,8 +192,16 @@ public class PlayerController : MonoBehaviour
             );
         }
 
+        // Apply gravity
+        if (!isGrounded)
+        {
+            verticalVelocity += gravity * Time.deltaTime;
+        }
+
         // Apply movement
-        controller.Move(currentVelocity * Time.deltaTime);
+        Vector3 movement = currentVelocity;
+        movement.y = verticalVelocity;
+        controller.Move(movement * Time.deltaTime);
 
         // Set animator parameters
         if (animator != null)
@@ -188,7 +210,6 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", speedPercent);
             animator.SetBool("isWalking", isMoving && !isRunning);
             animator.SetBool("isRunning", isMoving && isRunning);
-            
         }
     }
 
@@ -341,19 +362,6 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-
-        // Handle weapon-specific inputs
-        if (Input.GetMouseButtonDown(0) && !isReloading && !isRolling)
-        {
-            if (currentWeapon.isMelee)
-            {
-                PerformMeleeAttack(currentCombo);
-            }
-            else
-            {
-                // Handle gun shooting logic here
-            }
-        }
     }
 
     public void PerformMeleeAttack(int comboCount)
@@ -362,8 +370,9 @@ public class PlayerController : MonoBehaviour
         if (staminaController != null && !staminaController.CanPerformAction(staminaController.meleeAttackCost)) return;
 
         isAttacking = true;
-        currentCombo = Mathf.Min(comboCount + 1, maxCombo);
+        currentCombo = comboCount;  // Use the combo count directly
         comboTimer = 0f;
+
 
         if (staminaController != null)
         {
@@ -376,10 +385,14 @@ public class PlayerController : MonoBehaviour
             animator.SetLayerWeight(upperBodyLayerIndex, 1f);
             animator.SetInteger("combo", currentCombo);
             animator.SetTrigger("isAttacking");
+
+            // Debug log the current animation state
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            Debug.Log($"Current animation state: {stateInfo.fullPathHash}, combo parameter: {animator.GetInteger("combo")}");
         }
 
         // Reset attack state after animation
-        StartCoroutine(ResetAttackAfterDelay(0.5f)); // Adjust time based on your attack animation length
+        StartCoroutine(ResetAttackAfterDelay(0.8f)); // Adjust time based on your attack animation length
     }
 
     IEnumerator ResetAttackAfterDelay(float delay)
