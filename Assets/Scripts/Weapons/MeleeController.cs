@@ -52,15 +52,25 @@ public class MeleeController : BaseWeapon
         bool isInAttackAnimation = false;
         if (playerController != null && playerController.animator != null)
         {
-            AnimatorStateInfo stateInfo = playerController.animator.GetCurrentAnimatorStateInfo(0);
-            isInAttackAnimation = stateInfo.IsName("Attack1") || stateInfo.IsName("Attack2");
+            Animator anim = playerController.animator;
+            // Check all layers
+            for (int i = 0; i < anim.layerCount; i++)
+            {
+                AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(i);
+                string stateName = anim.GetLayerName(i);
+                
+                if (stateInfo.IsTag("Attack"))
+                {
+                    isInAttackAnimation = true;
+                    break;
+                }
+            }
             
-            // If we're not in an attack animation and enough time has passed, reset the combo
-            if (!isInAttackAnimation && Time.time - lastAttackTime > comboWindow)
+            // If we're not in an attack animation, reset the combo
+            if (!isInAttackAnimation)
             {
                 if (comboCount != 0)
                 {
-                    Debug.Log("Combo reset due to time window");
                     comboCount = 0;
                 }
             }
@@ -79,19 +89,44 @@ public class MeleeController : BaseWeapon
 
         if (playerController != null)
         {
-            // Only increment combo if we're not at max combo
-            if (comboCount < 2)
+            
+            // Only check if we're in an attack animation
+            bool isInAttackAnimation = false;
+            if (playerController.animator != null)
+            {
+                Animator animator = playerController.animator;
+                for (int i = 0; i < animator.layerCount; i++)
+                {
+                    AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(i);
+                    if (stateInfo.IsTag("Attack"))
+                    {
+                        isInAttackAnimation = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isInAttackAnimation)
             {
                 comboCount++;
+                if (comboCount > 2) // Reset if we exceed max combo
+                {
+                    comboCount = 0;
+                }
+                // Set canCombo to true to allow transition to next attack
+                playerController.animator.SetBool("canCombo", true);
             }
             else
             {
-                // If we're at max combo, reset to 1 to start a new combo
-                comboCount = 1;
+                comboCount = 1; // Start new combo
+                // Set canCombo to false to return to pose
+                playerController.animator.SetBool("canCombo", false);
             }
             
-            Debug.Log($"Starting attack with combo: {comboCount}");
-            playerController.PerformMeleeAttack(comboCount);
+            Debug.Log($"After increment - New combo: {comboCount}");
+
+            // Debug animation parameters before attack
+            Animator anim = playerController.animator;
         }
         else
         {
@@ -101,7 +136,7 @@ public class MeleeController : BaseWeapon
         if (attackCollider != null)
         {
             attackCollider.enabled = true;
-            StartCoroutine(DisableColliderAfterDelay(0.2f)); // You can tweak timing
+            StartCoroutine(DisableColliderAfterDelay(0.2f));
         }
     }
 

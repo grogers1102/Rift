@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public float lookSpeed = 1.5f;
     public float acceleration = 20f;
     public float deceleration = 15f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 1f;
     public Camera playerCamera;
     public FirstPersonLook cameraController;
 
@@ -39,6 +41,10 @@ public class PlayerController : MonoBehaviour
     public bool isRunning = false;
     private PlayerStaminaController staminaController;
 
+    [Header("Weapon Settings")]
+    public bool hasCrossbow = false;
+    private WeaponSwitchController weaponSwitchController;
+
     public void SetHeals(int amount)
     {
         remainingHeals = Mathf.Clamp(amount, 0, maxHeals);
@@ -51,7 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool isRolling = false;
     private bool isAttacking = false;
     private bool isReloading = false;
-    private WeaponSwitchController weaponSwitchController;
+    private float verticalVelocity = 0f;
+    private bool isGrounded;
 
     private void Start()
     {
@@ -59,6 +66,9 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
         remainingHeals = maxHeals;
+        
+        // Reset vertical velocity
+        verticalVelocity = 0f;
         
         // Camera and cursor setup
         Cursor.visible = false;
@@ -69,6 +79,13 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetLayerWeight(lowerBodyLayerIndex, 1f);
             animator.SetLayerWeight(upperBodyLayerIndex, 1f);
+            // Reset all animation parameters
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
+            animator.SetBool("hasCrossbow", false);
+            animator.SetInteger("equippedWeapon", 0);
+            animator.SetInteger("combo", 0);
+            animator.SetFloat("Speed", 0f);
         }
 
         // Setup camera if not assigned
@@ -87,7 +104,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // Setup weapon controller
         weaponSwitchController = GetComponent<WeaponSwitchController>();
+        if (weaponSwitchController == null)
+        {
+            Debug.LogWarning("WeaponSwitchController not found on player. Weapon animations may not work correctly.");
+        }
+
         staminaController = GetComponent<PlayerStaminaController>();
     }
 
@@ -103,6 +126,13 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
+        // Check if grounded
+        isGrounded = controller.isGrounded;
+        if (isGrounded && verticalVelocity < 0)
+        {
+            verticalVelocity = -2f; // Small negative value to keep grounded
+        }
+
         // Get input
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -162,8 +192,16 @@ public class PlayerController : MonoBehaviour
             );
         }
 
+        // Apply gravity
+        if (!isGrounded)
+        {
+            verticalVelocity += gravity * Time.deltaTime;
+        }
+
         // Apply movement
-        controller.Move(currentVelocity * Time.deltaTime);
+        Vector3 movement = currentVelocity;
+        movement.y = verticalVelocity;
+        controller.Move(movement * Time.deltaTime);
 
         // Set animator parameters
         if (animator != null)
@@ -172,7 +210,6 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", speedPercent);
             animator.SetBool("isWalking", isMoving && !isRunning);
             animator.SetBool("isRunning", isMoving && isRunning);
-            
         }
     }
 
@@ -227,10 +264,17 @@ public class PlayerController : MonoBehaviour
         {
             // Set reload animation on upper body layer
             animator.SetLayerWeight(upperBodyLayerIndex, 1f);
-            animator.SetTrigger("isReloading");
+            if (hasCrossbow)
+            {
+                animator.SetTrigger("isReloadingCrossbow");
+            }
+            else
+            {
+                animator.SetTrigger("isReloading");
+            }
         }
         // Wait for reload animation to complete
-        yield return new WaitForSeconds(2f); // Adjust this time to match your reload animation
+        yield return new WaitForSeconds(hasCrossbow ? 3f : 2f); // Crossbow reload takes longer
         isReloading = false;
     }
 
@@ -275,10 +319,26 @@ public class PlayerController : MonoBehaviour
 
     void UpdateEquippedWeapon()
     {
-        if (weaponSwitchController == null) return;
+        if (weaponSwitchController == null)
+        {
+            // If no weapon controller, set to unequipped state
+            if (animator != null)
+            {
+                animator.SetInteger("equippedWeapon", 0);
+            }
+            return;
+        }
 
         WeaponInfo currentWeapon = weaponSwitchController.GetCurrentWeaponInfo();
-        if (currentWeapon == null) return;
+        if (currentWeapon == null)
+        {
+            // If no weapon is equipped, set to unequipped state
+            if (animator != null)
+            {
+                animator.SetInteger("equippedWeapon", 0);
+            }
+            return;
+        }
 
         // Set equippedWeapon based on weapon type
         if (!currentWeapon.isMelee)
@@ -302,19 +362,6 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-
-        // Handle weapon-specific inputs
-        if (Input.GetMouseButtonDown(0) && !isReloading && !isRolling)
-        {
-            if (currentWeapon.isMelee)
-            {
-                PerformMeleeAttack(currentCombo);
-            }
-            else
-            {
-                // Handle gun shooting logic here
-            }
-        }
     }
 
     public void PerformMeleeAttack(int comboCount)
@@ -323,8 +370,9 @@ public class PlayerController : MonoBehaviour
         if (staminaController != null && !staminaController.CanPerformAction(staminaController.meleeAttackCost)) return;
 
         isAttacking = true;
-        currentCombo = Mathf.Min(comboCount + 1, maxCombo);
+        currentCombo = comboCount;  // Use the combo count directly
         comboTimer = 0f;
+
 
         if (staminaController != null)
         {
@@ -337,10 +385,14 @@ public class PlayerController : MonoBehaviour
             animator.SetLayerWeight(upperBodyLayerIndex, 1f);
             animator.SetInteger("combo", currentCombo);
             animator.SetTrigger("isAttacking");
+
+            // Debug log the current animation state
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            Debug.Log($"Current animation state: {stateInfo.fullPathHash}, combo parameter: {animator.GetInteger("combo")}");
         }
 
         // Reset attack state after animation
-        StartCoroutine(ResetAttackAfterDelay(0.5f)); // Adjust time based on your attack animation length
+        StartCoroutine(ResetAttackAfterDelay(0.8f)); // Adjust time based on your attack animation length
     }
 
     IEnumerator ResetAttackAfterDelay(float delay)
@@ -353,101 +405,5 @@ public class PlayerController : MonoBehaviour
     {
         if (animator == null) return false;
         return animator.HasState(0, Animator.StringToHash(animationName));
-    }
-}
-
-public class PlayerStaminaController : MonoBehaviour
-{
-    [Header("Stamina Settings")]
-    public float maxStamina = 100f;
-    public float currentStamina;
-    public float staminaRegenRate = 10f;
-    public float staminaRegenDelay = 2f;
-
-    [Header("Action Costs")]
-    public float rollCost = 25f;
-    public float runCostPerSecond = 10f;
-    public float meleeAttackCost = 15f;
-    public float gunShotCost = 10f;
-
-    [Header("UI Elements")]
-    public Slider staminaSlider;
-    public Image staminaFill;
-    public Color normalColor = Color.green;
-    public Color lowColor = Color.red;
-    public float lowStaminaThreshold = 25f;
-
-    private float lastActionTime;
-    private bool isRegenerating = false;
-    private PlayerController playerController;
-
-    private void Start()
-    {
-        currentStamina = maxStamina;
-        playerController = GetComponent<PlayerController>();
-        UpdateStaminaUI();
-    }
-
-    private void Update()
-    {
-        if (Time.time - lastActionTime >= staminaRegenDelay && currentStamina < maxStamina)
-        {
-            currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
-            UpdateStaminaUI();
-        }
-
-        if (playerController != null && playerController.isRunning)
-        {
-            UseStamina(runCostPerSecond * Time.deltaTime);
-        }
-    }
-
-    public bool CanPerformAction(float cost)
-    {
-        return currentStamina >= cost;
-    }
-
-    public void UseStamina(float amount)
-    {
-        currentStamina = Mathf.Max(0, currentStamina - amount);
-        lastActionTime = Time.time;
-        UpdateStaminaUI();
-    }
-
-    public void OnRoll()
-    {
-        if (CanPerformAction(rollCost))
-        {
-            UseStamina(rollCost);
-        }
-    }
-
-    public void OnMeleeAttack()
-    {
-        if (CanPerformAction(meleeAttackCost))
-        {
-            UseStamina(meleeAttackCost);
-        }
-    }
-
-    public void OnGunShot()
-    {
-        if (CanPerformAction(gunShotCost))
-        {
-            UseStamina(gunShotCost);
-        }
-    }
-
-    private void UpdateStaminaUI()
-    {
-        if (staminaSlider != null)
-        {
-            staminaSlider.value = currentStamina / maxStamina;
-        }
-
-        if (staminaFill != null)
-        {
-            staminaFill.color = currentStamina <= lowStaminaThreshold ? lowColor : normalColor;
-        }
     }
 }
