@@ -125,8 +125,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 0
+  detectionRange: 10
+  meleeRange: 3
   Player: {fileID: 0}
   navMeshAgent: {fileID: 1759531348229513157}
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Anim: {fileID: 0}
   isRange: 0
   isMelee: 1
@@ -191,4 +197,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90e9795ec53bf9742be01fead090ee3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  maxHealth: 100
+  currentHealth: 0
+  damageMultiplier: 1
+  isInvincible: 0
+  invincibilityDuration: 0.5
+  hitEffect: {fileID: 1067619992173610537, guid: f78fac65e7834ae44bc8699ee708ad6a, type: 3}
+  deathEffect: {fileID: 0}
+  hitEffectDuration: 0.2
+  deathEffectDuration: 2
+  hitFlashDuration: 0.1
+  hitFlashColor: {r: 1, g: 0, b: 0, a: 1}

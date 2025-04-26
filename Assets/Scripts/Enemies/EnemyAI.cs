@@ -8,6 +8,8 @@ public class EnemyAI : MonoBehaviour
 {
     [Header("NavMesh")]
     public float distance;
+    public float detectionRange = 10f;
+    public float meleeRange = 3f;
     public Transform Player;
     public NavMeshAgent navMeshAgent;
     [Header("Patrolling")]
@@ -15,8 +17,8 @@ public class EnemyAI : MonoBehaviour
     private int currentWaypointIndex = 0;
     [Header("Enemy Behavior")]
     public Animator Anim;
-    public bool isRange;
-    public bool isMelee;
+    public bool isRange; //Enemy is capable of ranged attacks
+    public bool isMelee; //Enemy is capable of melee attackes
     /*public GameObject playerObj;
     Transform player;
     public float detectionRange = 50;
@@ -28,16 +30,31 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         distance = Vector3.Distance(this.transform.position, Player.position);
-        if(distance < 10){
-            navMeshAgent.destination = Player.position;
-            if(distance <= 3){
-                navMeshAgent.isStopped = true;
+        if(distance < detectionRange){
+            if(isMelee && !isRange){
+                navMeshAgent.destination = Player.position;
+                if(distance <= meleeRange && isMelee){
+                    navMeshAgent.isStopped = true;
+                    //Trigger Attack Animation
+                }
+                else{
+                    navMeshAgent.isStopped = false;
+                    //Continue pursuing player
+                }
             }
-            else{
-                navMeshAgent.isStopped = false;
+            else if(isRange){
+                // Ranged enemies stop moving and rotate to face the player
+                navMeshAgent.isStopped = true;
+                Vector3 direction = (Player.position - transform.position).normalized;
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+                if(isMelee && distance <= meleeRange){
+                    //Trigger Attack Animation
+                }
             }
         }
         else{
+            navMeshAgent.isStopped = false;
             OnPatrol();
         }
     }
