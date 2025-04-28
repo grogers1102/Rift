@@ -254,6 +254,13 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetTrigger("isHealing");
             }
+            
+            // Update PlayerHealthController
+            PlayerHealthController healthController = GetComponent<PlayerHealthController>();
+            if (healthController != null)
+            {
+                healthController.Heal(healAmount);
+            }
         }
     }
 
