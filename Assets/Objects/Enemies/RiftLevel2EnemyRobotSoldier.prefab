@@ -73,9 +73,6 @@ PrefabInstance:
       addedObject: {fileID: 392905003314090109}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: defc049df55394e4890ef16950a13490, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 219420811886203910}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: defc049df55394e4890ef16950a13490, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5093489101796758666}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: defc049df55394e4890ef16950a13490, type: 3}
       insertIndex: -1
@@ -115,28 +112,6 @@ CapsuleCollider:
   m_Height: 13.789721
   m_Direction: 1
   m_Center: {x: 0.10980884, y: -0.16748586, z: -0.726738}
---- !u!195 &219420811886203910
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8402900592597289997}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0.5
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!54 &5093489101796758666
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -203,7 +178,7 @@ MonoBehaviour:
   detectionRange: 10
   meleeRange: 3
   Player: {fileID: 0}
-  navMeshAgent: {fileID: 219420811886203910}
+  navMeshAgent: {fileID: 0}
   waypoints: []
   Anim: {fileID: 4783648296004096228}
   isRange: 1

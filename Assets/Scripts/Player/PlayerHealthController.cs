@@ -26,9 +26,13 @@ public class PlayerHealthController : MonoBehaviour
     private Color originalFlashColor;
     private float flashTimer;
     private bool isDead = false;
+    private PlayerController playerController;
 
     private void Start()
     {
+        // Get reference to PlayerController
+        playerController = GetComponent<PlayerController>();
+        
         // Initialize sliders
         if (healthSlider != null)
         {
@@ -90,7 +94,8 @@ public class PlayerHealthController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (isInvincible || isDead) return;
+        // Check both regular invincibility and roll invincibility
+        if (isInvincible || isDead || (playerController != null && playerController.IsInvincible)) return;
 
         // Apply damage
         currentHealth -= damage * damageMultiplier;
@@ -145,7 +150,6 @@ public class PlayerHealthController : MonoBehaviour
         }
 
         // Disable player controls
-        PlayerController playerController = GetComponent<PlayerController>();
         if (playerController != null)
         {
             playerController.enabled = false;

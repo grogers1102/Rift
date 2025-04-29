@@ -29,6 +29,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Rolling Settings")]
     [SerializeField] private float rollDuration = 0.7f;
+    private bool isInvincible = false;
+
+    // Add this property to check if player is invincible
+    public bool IsInvincible => isInvincible;
 
     [Header("Health Settings")]
     public float maxHealth = 100f;
@@ -122,6 +126,7 @@ public class PlayerController : MonoBehaviour
         HandleReloading();
         HandleComboTimer();
         UpdateEquippedWeapon();
+        HandleAttackInput();
     }
 
     void HandleMovement()
@@ -175,10 +180,10 @@ public class PlayerController : MonoBehaviour
                 acceleration * Time.deltaTime
             );
 
-            // Only rotate if we're not using camera rotation
-            if (cameraController == null)
+            // Only rotate the player when moving forward
+            if (v > 0 && currentVelocity.magnitude > 0.1f)
             {
-                Quaternion toRotation = Quaternion.LookRotation(input, Vector3.up);
+                Quaternion toRotation = Quaternion.LookRotation(forward, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
             }
         }
@@ -210,6 +215,9 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", speedPercent);
             animator.SetBool("isWalking", isMoving && !isRunning);
             animator.SetBool("isRunning", isMoving && isRunning);
+
+            // Debug movement values
+            Debug.Log($"Movement - Speed: {speedPercent}, isWalking: {isMoving && !isRunning}, isRunning: {isMoving && isRunning}, Velocity: {currentVelocity.magnitude}");
         }
     }
 
@@ -288,6 +296,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator HandleDodgeRoll()
     {
         isRolling = true;
+        isInvincible = true; // Set invincible at start of roll
         
         // Store current layer weights
         float lowerBodyWeight = animator.GetLayerWeight(lowerBodyLayerIndex);
@@ -305,6 +314,7 @@ public class PlayerController : MonoBehaviour
         animator.SetLayerWeight(lowerBodyLayerIndex, lowerBodyWeight);
         animator.SetLayerWeight(upperBodyLayerIndex, upperBodyWeight);
         isRolling = false;
+        isInvincible = false; // Remove invincibility at end of roll
     }
 
     void HandleComboTimer()
@@ -371,15 +381,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void HandleAttackInput()
+    {
+        if (Input.GetMouseButtonDown(0) && !isRolling && !isReloading)
+        {
+            if (currentCombo == 0)
+            {
+                // First attack
+                PerformMeleeAttack(1);
+            }
+            else if (currentCombo == 1 && animator.GetBool("canCombo"))
+            {
+                // Second attack when canCombo is true
+                PerformMeleeAttack(2);
+            }
+        }
+    }
+
     public void PerformMeleeAttack(int comboCount)
     {
-        if (isAttacking || isRolling) return;
+        if (isRolling) return;
         if (staminaController != null && !staminaController.CanPerformAction(staminaController.meleeAttackCost)) return;
 
         isAttacking = true;
-        currentCombo = comboCount;  // Use the combo count directly
+        currentCombo = comboCount;
         comboTimer = 0f;
-
 
         if (staminaController != null)
         {
@@ -392,10 +418,20 @@ public class PlayerController : MonoBehaviour
             animator.SetLayerWeight(upperBodyLayerIndex, 1f);
             animator.SetInteger("combo", currentCombo);
             animator.SetTrigger("isAttacking");
+            
+            // Set canCombo to true for the first attack
+            if (comboCount == 1)
+            {
+                animator.SetBool("canCombo", true);
+            }
+            else
+            {
+                animator.SetBool("canCombo", false);
+            }
 
             // Debug log the current animation state
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            Debug.Log($"Current animation state: {stateInfo.fullPathHash}, combo parameter: {animator.GetInteger("combo")}");
+            Debug.Log($"Current animation state: {stateInfo.fullPathHash}, combo parameter: {animator.GetInteger("combo")}, canCombo: {animator.GetBool("canCombo")}");
         }
 
         // Reset attack state after animation
@@ -406,6 +442,12 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         isAttacking = false;
+        currentCombo = 0; // Reset combo when attack animation ends
+        if (animator != null)
+        {
+            animator.SetInteger("combo", 0);
+            animator.SetBool("canCombo", false);
+        }
     }
 
     private bool HasAnimation(string animationName)

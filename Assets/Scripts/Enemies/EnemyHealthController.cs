@@ -59,6 +59,7 @@ public class EnemyHealthController : MonoBehaviour
 
         // Apply damage
         currentHealth -= damage * damageMultiplier;
+        Debug.Log($"Enemy took {damage * damageMultiplier} damage. Current health: {currentHealth}");
 
         // Visual feedback
         if (hitEffect != null)
@@ -100,6 +101,7 @@ public class EnemyHealthController : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+        Debug.Log("Enemy died!");
 
         // Play death effect
         if (deathEffect != null)
