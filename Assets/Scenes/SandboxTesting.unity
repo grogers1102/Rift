@@ -1356,6 +1356,34 @@ PrefabInstance:
       propertyPath: hitEffect
       value: 
       objectReference: {fileID: 1067619992173610537, guid: f78fac65e7834ae44bc8699ee708ad6a, type: 3}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -180
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829648140617531587, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3762841048162989118, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
       propertyPath: Player
       value: 
@@ -1372,6 +1400,14 @@ PrefabInstance:
       propertyPath: modelTransform
       value: 
       objectReference: {fileID: 665492051}
+    - target: {fileID: 4231102581456160614, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_Size.x
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4231102581456160614, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
+      propertyPath: m_Size.z
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5818624345462917863, guid: 1dd29ab4aff94d7468648aa8efcee21e, type: 3}
       propertyPath: m_Name
       value: Level1Termanid
