@@ -58,6 +58,14 @@ public class MeleeController : BaseWeapon
 
         // Debug layer setup
         Debug.Log($"Melee attack enemy layer: {enemyLayer.value}");
+        Debug.Log($"Layer 'Enemies' index: {LayerMask.NameToLayer("Enemies")}");
+        Debug.Log($"Layer 'Enemies' mask value: {1 << LayerMask.NameToLayer("Enemies")}");
+        
+        // Verify the layer mask is set correctly
+        if (enemyLayer != (1 << LayerMask.NameToLayer("Enemies")))
+        {
+            Debug.LogWarning("Enemy layer mask might not be set correctly! Please check the layer mask in the inspector.");
+        }
     }
 
     private void Update()
@@ -144,78 +152,94 @@ public class MeleeController : BaseWeapon
     {        
         Debug.Log("Starting melee attack raycast");
         
-        // Calculate the angle between each ray
+        // First, check for enemies in range using OverlapSphere
+        Collider[] hitColliders = Physics.OverlapSphere(attackPoint.position, meleeAttackRadius, enemyLayer);
+        foreach (Collider hitCollider in hitColliders)
+        {
+            EnemyHealthController enemy = hitCollider.GetComponent<EnemyHealthController>();
+            if (enemy != null)
+            {
+                Debug.Log($"Found enemy in range: {hitCollider.gameObject.name}");
+                enemy.TakeDamage(weaponInfo.meleeDamage);
+                
+                // Show combat feedback at hit point
+                if (combatFeedback != null)
+                {
+                    combatFeedback.ShowHitMarker(hitCollider.transform.position);
+                }
+
+                // Play hit effect
+                if (hitEffect != null)
+                {
+                    hitEffect.Play();
+                }
+                
+                return; // Exit after hitting one enemy
+            }
+        }
+        
+        // If no enemies found in range, proceed with raycast as before
         float angleStep = meleeAttackAngle / (meleeRayCount - 1);
         float startAngle = -meleeAttackAngle / 2f;
         
         // Get the forward direction from the attack point
         Vector3 forward = attackPoint.forward;
-        Debug.Log($"Attack direction: {forward}, Position: {attackPoint.position}, Attack radius: {meleeAttackRadius}");
+        
+        // Adjust attack point to be in front of the player
+        Vector3 attackPosition = attackPoint.position + forward * 1f; // Move 1 unit forward from camera
+        Debug.Log($"Attack direction: {forward}, Position: {attackPosition}, Attack radius: {meleeAttackRadius}");
         
         // Cast multiple capsule casts in a cone pattern
         for (int i = 0; i < meleeRayCount; i++)
         {
-            // Calculate the angle for this ray
             float currentAngle = startAngle + (angleStep * i);
-            
-            // Rotate the forward direction by the current angle
             Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
             
             // Calculate capsule points (slightly above and below the center)
-            Vector3 point1 = attackPoint.position + Vector3.up * meleeCapsuleRadius;
-            Vector3 point2 = attackPoint.position - Vector3.up * meleeCapsuleRadius;
+            Vector3 point1 = attackPosition + Vector3.up * meleeCapsuleRadius;
+            Vector3 point2 = attackPosition - Vector3.up * meleeCapsuleRadius;
             
             // Cast the capsule
             RaycastHit hit;
-            Debug.DrawRay(attackPoint.position, direction * meleeAttackRadius, Color.yellow, 2f); // Make rays visible longer
-            Debug.Log($"Casting ray {i} from {attackPoint.position} in direction {direction} with length {meleeAttackRadius}");
+            Debug.DrawRay(attackPosition, direction * meleeAttackRadius, Color.yellow, 2f);
 
             if (Physics.CapsuleCast(point1, point2, meleeCapsuleRadius, direction, out hit, meleeAttackRadius, enemyLayer))
             {
-                // Visualize the ray in the editor
-                Debug.DrawRay(attackPoint.position, direction * hit.distance, Color.red, 2f);
-                Debug.Log($"Ray {i} hit something at distance {hit.distance}. Hit object: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+                Debug.DrawRay(attackPosition, direction * hit.distance, Color.red, 2f);
+                Debug.Log($"Ray {i} hit something at distance {hit.distance}. Hit object: {hit.collider.gameObject.name}");
                 
-                // Check if we hit an enemy
                 EnemyHealthController enemy = hit.collider.GetComponent<EnemyHealthController>();
                 if (enemy != null)
                 {
                     Debug.Log($"Found EnemyHealthController on hit object. Current health: {enemy.currentHealth}");
                     
-                    // Show combat feedback at hit point
                     if (combatFeedback != null)
                     {
                         combatFeedback.ShowHitMarker(hit.point);
                     }
 
-                    // Apply damage
                     enemy.TakeDamage(weaponInfo.meleeDamage);
                     Debug.Log($"Applied {weaponInfo.meleeDamage} damage to enemy. New health: {enemy.currentHealth}");
 
-                    // Play hit effect
                     if (hitEffect != null)
                     {
                         hitEffect.Play();
                     }
                     
-                    break; // Stop after hitting one enemy
+                    break;
                 }
-                else
-                {
-                    Debug.Log($"Hit object {hit.collider.gameObject.name} but no EnemyHealthController found");
-                }
-            }
-            else
-            {
-                Debug.Log($"Ray {i} did not hit anything");
             }
         }
     }
 
-    // Optional: Visualize the melee attack cone in the editor
+    // Optional: Visualize the melee attack sphere in the editor
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;
+
+        // Draw the melee attack sphere
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(attackPoint.position, meleeAttackRadius);
 
         // Draw the melee attack cone
         Gizmos.color = Color.red;
@@ -228,7 +252,6 @@ public class MeleeController : BaseWeapon
             float currentAngle = startAngle + (angleStep * i);
             Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
             
-            // Draw the capsule cast
             Vector3 point1 = attackPoint.position + Vector3.up * meleeCapsuleRadius;
             Vector3 point2 = attackPoint.position - Vector3.up * meleeCapsuleRadius;
             Gizmos.DrawWireSphere(point1, meleeCapsuleRadius);
