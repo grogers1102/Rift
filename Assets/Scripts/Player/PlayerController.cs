@@ -311,7 +311,10 @@ public class PlayerController : MonoBehaviour
         animator.SetLayerWeight(lowerBodyLayerIndex, lowerBodyWeight);
         animator.SetLayerWeight(upperBodyLayerIndex, upperBodyWeight);
         isRolling = false;
-        isInvincible = false; // Remove invincibility at end of roll
+        
+        // Add a small invincibility buffer after the roll ends
+        yield return new WaitForSeconds(0.2f); // 200ms buffer
+        isInvincible = false; // Remove invincibility after buffer
     }
 
     void HandleComboTimer()
