@@ -113,7 +113,7 @@ MonoBehaviour:
   isAutomatic: 1
   fireRate: 20
   reloadSpeed: 4.5
-  bulletDamage: 8.5
+  bulletDamage: 2
   meleeDamage: 0
   attackRate: 0
 --- !u!114 &7950537431526347022

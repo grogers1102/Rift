@@ -215,9 +215,6 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", speedPercent);
             animator.SetBool("isWalking", isMoving && !isRunning);
             animator.SetBool("isRunning", isMoving && isRunning);
-
-            // Debug movement values
-            Debug.Log($"Movement - Speed: {speedPercent}, isWalking: {isMoving && !isRunning}, isRunning: {isMoving && isRunning}, Velocity: {currentVelocity.magnitude}");
         }
     }
 
