@@ -22,6 +22,7 @@ public class EnemyAI : MonoBehaviour
     [Header("Model Settings")]
     public Transform modelTransform; // Reference to the model's transform
     public bool isModelFacingBackwards = true; // Set to true if model is facing backwards
+    public Vector3 modelScale = Vector3.one; // Scale to apply to the model
     [Header("Ranged Attack Settings")]
     public float shootRange = 15f;
     public float shootCooldown = 2f;
@@ -78,10 +79,16 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        // Fix model rotation if needed
-        if (isModelFacingBackwards && modelTransform != null)
+        // Apply scale if modelTransform is found
+        if (modelTransform != null)
         {
-            modelTransform.localRotation = Quaternion.Euler(0, 180, 0);
+            modelTransform.localScale = modelScale;
+            
+            // Fix model rotation if needed
+            if (isModelFacingBackwards)
+            {
+                modelTransform.localRotation = Quaternion.Euler(0, 180, 0);
+            }
         }
     }
 
