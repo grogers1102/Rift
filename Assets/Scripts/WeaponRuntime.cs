@@ -6,13 +6,17 @@ public class WeaponRuntime : MonoBehaviour
     public int currentMagAmmo;
     public int currentTotalAmmo;
     public string weaponName;
-    private WeaponInfo info;
+    public WeaponSwitchController playerWeapons;
 
-    void Start()
-    {
-        info = GetComponent<WeaponInfo>();
+    void Start(){
+        WeaponInfo info = playerWeapons.GetCurrentWeaponInfo();
         currentMagAmmo = info.magSize;
         currentTotalAmmo = info.maxAmmo;
         weaponName = info.weaponName;
+    }
+    void Update(){
+        GunController gun = playerWeapons.currentGun.GetComponent<GunController>();
+        currentMagAmmo = gun.currentMagAmmo;
+        currentTotalAmmo = gun.currentAmmo;
     }
 }

@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\WeaponUIManager.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Enemies\AttackEndDamage.cs" />
+    <Compile Include="Assets\Scripts\MenuTransition.cs" />
     <Compile Include="Assets\JMO Assets\WarFX\Scripts\WFX_BulletHoleDecal.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponFollowCamera.cs" />
     <Compile Include="Assets\Scripts\Player\CombatFeedback.cs" />

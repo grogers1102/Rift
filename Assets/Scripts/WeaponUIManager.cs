@@ -8,7 +8,7 @@ public class WeaponUIManager : MonoBehaviour
     public TextMeshProUGUI currentMagAmmo;
     public TextMeshProUGUI currentMaxAmmo;
     public TextMeshProUGUI currentWeaponName;
-    private WeaponRuntime currentRuntime;
+    public WeaponRuntime currentRuntime;
 
     void Update()
     {
@@ -16,19 +16,20 @@ public class WeaponUIManager : MonoBehaviour
         UpdateAmmoUI();
     }
     void UpdateCurrentWeapon(){
-        GameObject currentWeapon = null;
+        GunController gun = null;
+        MeleeController melee = null;
         if (weaponController.currentGun != null && weaponController.currentGun.activeSelf){
-            currentWeapon = weaponController.currentGun;
+            gun = weaponController.currentGun.GetComponent<GunController>();
         }
         else if (weaponController.currentMelee != null && weaponController.currentMelee.activeSelf){
-            currentWeapon = weaponController.currentMelee;
+            melee = weaponController.GetComponent<MeleeController>();
         }
-        if (currentWeapon != null){
+        /*if (currentWeapon != null){
             WeaponRuntime runtime = currentWeapon.GetComponent<WeaponRuntime>();
             if (runtime != currentRuntime){
                 currentRuntime = runtime;
             }
-        }
+        }*/
     }
     void UpdateAmmoUI(){
         WeaponInfo info = weaponController.GetCurrentWeaponInfo();

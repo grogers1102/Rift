@@ -8,6 +8,7 @@ public class GunController : BaseWeapon
     public ParticleSystem muzzleFlash;
     public float nextTimeToFire = 0f;
     public int currentAmmo;
+    public int currentMagAmmo;
     private Camera fpsCamera;
     private PlayerStaminaController staminaController;
     private CombatFeedback combatFeedback;
@@ -15,7 +16,8 @@ public class GunController : BaseWeapon
     protected override void Start ()
     {
         base.Start();
-        currentAmmo = weaponInfo.magSize;
+        currentMagAmmo = weaponInfo.magSize;
+        currentAmmo = weaponInfo.maxAmmo;
         staminaController = GetComponent<PlayerStaminaController>();
         combatFeedback = GetComponent<CombatFeedback>();
         
@@ -37,12 +39,14 @@ public class GunController : BaseWeapon
         if (Input.GetKeyDown(KeyCode.R) && CanUse())
         {
             StartReload();
+            currentMagAmmo = weaponInfo.magSize;
+            currentAmmo -= weaponInfo.magSize;
         }
     }
 
     private void Fire()
     {
-        if (currentAmmo <= 0)
+        if (currentMagAmmo <= 0)
         {
             StartReload();
             return;
@@ -54,7 +58,7 @@ public class GunController : BaseWeapon
         }
 
         nextTimeToFire = Time.time + 1f / weaponInfo.fireRate;
-        currentAmmo--;
+        currentMagAmmo--;
 
         if (staminaController != null)
         {
@@ -155,6 +159,5 @@ public class GunController : BaseWeapon
     public override void EndReload()
     {
         base.EndReload();
-        currentAmmo = weaponInfo.magSize;
     }
 }
