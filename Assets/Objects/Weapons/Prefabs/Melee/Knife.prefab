@@ -187,7 +187,7 @@ MonoBehaviour:
   comboWindow: 5
   meleeAttackRadius: 2
   meleeAttackAngle: 60
-  meleeRayCount: 10
+  meleeRayCount: 5
   meleeCapsuleRadius: 0.5
   playerController: {fileID: 0}
   combatFeedback: {fileID: 0}
