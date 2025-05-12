@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
 
 public class GunController : BaseWeapon
 {
@@ -39,8 +40,6 @@ public class GunController : BaseWeapon
         if (Input.GetKeyDown(KeyCode.R) && CanUse())
         {
             StartReload();
-            currentMagAmmo = weaponInfo.magSize;
-            currentAmmo -= weaponInfo.magSize;
         }
     }
 
@@ -129,31 +128,59 @@ public class GunController : BaseWeapon
         if (!isReloading)
         {
             isReloading = true;
-            
-            // Try weapon-specific reload animation first
-            if (animator != null)
+            StartCoroutine(ReloadCoroutine());
+        }
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        // Try weapon-specific reload animation first
+        if (animator != null)
+        {
+            string weaponSpecificAnim = $"{weaponInfo.weaponName}Reload";
+            if (HasAnimation(weaponSpecificAnim))
             {
-                string weaponSpecificAnim = $"{weaponInfo.weaponName}Reload";
-                if (HasAnimation(weaponSpecificAnim))
+                animator.SetTrigger(weaponSpecificAnim);
+                // Get the current animation state info
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                // Wait for the animation to complete
+                yield return new WaitForSeconds(stateInfo.length);
+            }
+            // Fallback to archetype-specific animation
+            else
+            {
+                string archetypeAnim = $"{weaponInfo.weaponArchitype}Reload";
+                if (HasAnimation(archetypeAnim))
                 {
-                    animator.SetTrigger(weaponSpecificAnim);
+                    animator.SetTrigger(archetypeAnim);
+                    // Get the current animation state info
+                    AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                    // Wait for the animation to complete
+                    yield return new WaitForSeconds(stateInfo.length);
                 }
-                // Fallback to archetype-specific animation
+                // Final fallback to generic reload
                 else
                 {
-                    string archetypeAnim = $"{weaponInfo.weaponArchitype}Reload";
-                    if (HasAnimation(archetypeAnim))
-                    {
-                        animator.SetTrigger(archetypeAnim);
-                    }
-                    // Final fallback to generic reload
-                    else
-                    {
-                        animator.SetTrigger("Reload");
-                    }
+                    animator.SetTrigger("Reload");
+                    // Get the current animation state info
+                    AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                    // Wait for the animation to complete
+                    yield return new WaitForSeconds(stateInfo.length);
                 }
             }
         }
+        else
+        {
+            // If no animator, use the weapon's reload speed
+            yield return new WaitForSeconds(weaponInfo.reloadSpeed);
+        }
+
+        // Update ammo after reload animation completes
+        currentMagAmmo = weaponInfo.magSize;
+        currentAmmo -= weaponInfo.magSize;
+        
+        // End reload state
+        isReloading = false;
     }
 
     public override void EndReload()

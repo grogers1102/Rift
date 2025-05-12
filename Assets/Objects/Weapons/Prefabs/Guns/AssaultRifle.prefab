@@ -4972,7 +4972,7 @@ MonoBehaviour:
   isAutomatic: 1
   fireRate: 20
   reloadSpeed: 4.5
-  bulletDamage: 2
+  bulletDamage: 10
   meleeDamage: 0
   attackRate: 0
 --- !u!114 &2947385794587075863
@@ -4992,6 +4992,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 1419053584390555057}
   nextTimeToFire: 0.5
   currentAmmo: 30
+  currentMagAmmo: 0
 --- !u!114 &-703442708161235978
 MonoBehaviour:
   m_ObjectHideFlags: 0

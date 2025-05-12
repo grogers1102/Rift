@@ -15,8 +15,12 @@ public class WeaponRuntime : MonoBehaviour
         weaponName = info.weaponName;
     }
     void Update(){
-        GunController gun = playerWeapons.currentGun.GetComponent<GunController>();
-        currentMagAmmo = gun.currentMagAmmo;
-        currentTotalAmmo = gun.currentAmmo;
+        if (playerWeapons.currentGun != null && playerWeapons.currentGun.activeSelf) {
+            GunController gun = playerWeapons.currentGun.GetComponent<GunController>();
+            if (gun != null) {
+                currentMagAmmo = gun.currentMagAmmo;
+                currentTotalAmmo = gun.currentAmmo;
+            }
+        }
     }
 }

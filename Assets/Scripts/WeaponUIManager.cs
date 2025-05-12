@@ -34,14 +34,21 @@ public class WeaponUIManager : MonoBehaviour
     void UpdateAmmoUI(){
         WeaponInfo info = weaponController.GetCurrentWeaponInfo();
         currentWeaponName.text = info.weaponName;
-        if (currentRuntime != null && weaponController.currentGun.activeSelf){
-            currentMagAmmo.text = currentRuntime.currentMagAmmo.ToString();
-            currentMaxAmmo.text = currentRuntime.currentTotalAmmo.ToString();
-        }
-        else{
+        
+        if (info.isMelee) {
+            // For melee weapons, show dashes for both ammo displays
             currentMagAmmo.text = "--";
             currentMaxAmmo.text = "--";
         }
-
+        else if (currentRuntime != null && weaponController.currentGun.activeSelf) {
+            // For guns, show both current magazine and total reserve ammo
+            currentMagAmmo.text = currentRuntime.currentMagAmmo.ToString();
+            currentMaxAmmo.text = currentRuntime.currentTotalAmmo.ToString();
+        }
+        else {
+            // Fallback for any other case
+            currentMagAmmo.text = "--";
+            currentMaxAmmo.text = "--";
+        }
     }
 }

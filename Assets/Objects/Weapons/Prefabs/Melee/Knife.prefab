@@ -165,7 +165,7 @@ MonoBehaviour:
   fireRate: 0
   reloadSpeed: 0
   bulletDamage: 0
-  meleeDamage: 30
+  meleeDamage: 50
   attackRate: 140
 --- !u!114 &8490150057679362223
 MonoBehaviour:
