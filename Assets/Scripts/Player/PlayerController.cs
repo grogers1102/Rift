@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -454,5 +455,12 @@ public class PlayerController : MonoBehaviour
     {
         if (animator == null) return false;
         return animator.HasState(0, Animator.StringToHash(animationName));
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.CompareTag("RestPoint")){
+            UnityEngine.SceneManagement.SceneManager.LoadScene("EndMenu");
+        }
     }
 }

@@ -90,6 +90,9 @@ public class PlayerHealthController : MonoBehaviour
             healthSlider.value = currentHealth;
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, currentHealth, lerpSpeed * Time.deltaTime);
         }
+        if(currentHealth <= 0){
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
+        }
     }
 
     public void TakeDamage(float damage)
