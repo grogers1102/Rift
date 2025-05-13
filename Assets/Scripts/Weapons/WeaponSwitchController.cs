@@ -14,6 +14,8 @@ public class WeaponSwitchController : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("WeaponSwitchController starting...");
+        
         // Get the main camera
         mainCamera = Camera.main;
         if (mainCamera == null)
@@ -26,13 +28,46 @@ public class WeaponSwitchController : MonoBehaviour
         if (gunAnchor == null)
         {
             gunAnchor = transform.Find("GunAnchor");
+            Debug.Log($"Gun anchor found: {gunAnchor != null}");
         }
         if (meleeAnchor == null)
         {
             meleeAnchor = transform.Find("MeleeAnchor");
+            Debug.Log($"Melee anchor found: {meleeAnchor != null}");
         }
 
-        // Initially equip the first weapons if they exist
+        // Fallback in case prefabs got stripped in build
+        if (currentGun == null)
+        {
+            Debug.Log("Attempting to load gun from Resources...");
+            var gunPrefab = Resources.Load<GameObject>("Weapons/AssaultRifle");
+            if (gunPrefab != null)
+            {
+                currentGun = Instantiate(gunPrefab);
+                Debug.Log($"Successfully loaded and instantiated gun: {currentGun.name}");
+            }
+            else
+            {
+                Debug.LogError("Failed to load gun prefab from Resources/Weapons/AssaultRifle");
+            }
+        }
+
+        if (currentMelee == null)
+        {
+            Debug.Log("Attempting to load melee weapon from Resources...");
+            var meleePrefab = Resources.Load<GameObject>("Weapons/FutureBlade");
+            if (meleePrefab != null)
+            {
+                currentMelee = Instantiate(meleePrefab);
+                Debug.Log($"Successfully loaded and instantiated melee weapon: {currentMelee.name}");
+            }
+            else
+            {
+                Debug.LogError("Failed to load melee prefab from Resources/Weapons/FutureBlade");
+            }
+        }
+
+        // Equip the weapons
         if (currentGun != null)
         {
             EquipGun(currentGun);
