@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 3382001873371483436}
   serializedVersion: 2
   m_LocalRotation: {x: 0.020309774, y: -0.7363094, z: -0.60582757, w: 0.3006811}
-  m_LocalPosition: {x: -0.00542, y: -0.00039, z: -0.00954}
+  m_LocalPosition: {x: -0.0015, y: 0.0027, z: 0.0008}
   m_LocalScale: {x: 0.009999994, y: 0.009999995, z: 0.009999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -227,11 +227,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe2f8145d9143824090a8d97b11c1a46, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.04
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe2f8145d9143824090a8d97b11c1a46, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.3
+      value: -0.62
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe2f8145d9143824090a8d97b11c1a46, type: 3}
       propertyPath: m_LocalRotation.w
@@ -723,8 +723,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc8bce8ebae7104aa1c8691c06aa5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGun: {fileID: 0}
-  currentMelee: {fileID: 0}
+  currentGun: {fileID: 1121462459580641375, guid: 07042ca83942d2d47b641183765ed990, type: 3}
+  currentMelee: {fileID: 6493781654723459785, guid: d5afa0a0ad04cd94dbd0b33d6cd96071, type: 3}
   gunAnchor: {fileID: 4737169085179048408}
   meleeAnchor: {fileID: 322043086794104679}
 --- !u!95 &7443604873146721837 stripped

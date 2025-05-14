@@ -32,7 +32,7 @@ public class GunController : BaseWeapon
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextTimeToFire && CanUse())
+        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= nextTimeToFire && CanUse())
         {
             Fire();
         }
@@ -68,9 +68,16 @@ public class GunController : BaseWeapon
         if (fpsCamera != null)
         {
             RaycastHit hit;
-            Vector3 rayOrigin = fpsCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
-            if (Physics.Raycast(rayOrigin, fpsCamera.transform.forward, out hit, weaponInfo.range))
+            Vector3 rayOrigin = fpsCamera.transform.position;
+            Vector3 rayDirection = fpsCamera.transform.forward;
+            
+            // Debug visualization
+            Debug.DrawRay(rayOrigin, rayDirection * weaponInfo.range, Color.red, 1f);
+            
+            if (Physics.Raycast(rayOrigin, rayDirection, out hit, weaponInfo.range))
             {
+                Debug.Log($"Hit object: {hit.collider.gameObject.name} at distance {hit.distance}");
+                
                 // Show combat feedback
                 if (combatFeedback != null)
                 {
@@ -87,15 +94,17 @@ public class GunController : BaseWeapon
                 EnemyHealthController enemy = hit.transform.GetComponent<EnemyHealthController>();
                 if (enemy != null)
                 {
+                    Debug.Log($"Applying {weaponInfo.bulletDamage} damage to enemy");
                     enemy.TakeDamage(weaponInfo.bulletDamage);
                 }
             }
             else
             {
+                Debug.Log("Shot missed");
                 // Show miss feedback (optional)
                 if (combatFeedback != null)
                 {
-                    combatFeedback.ShowHitMarker(rayOrigin + fpsCamera.transform.forward * weaponInfo.range);
+                    combatFeedback.ShowHitMarker(rayOrigin + rayDirection * weaponInfo.range);
                 }
             }
         }

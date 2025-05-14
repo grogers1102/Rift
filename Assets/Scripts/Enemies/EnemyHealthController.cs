@@ -10,14 +10,14 @@ public class EnemyHealthController : MonoBehaviour
     public float currentHealth;
     public float damageMultiplier = 1f;
     public bool isInvincible = false;
-    public float invincibilityDuration = 0.5f;
+    public float invincibilityDuration = 0.1f;
 
     [Header("Visual Feedback")]
     public GameObject hitEffect;
     public GameObject deathEffect;
-    public float hitEffectDuration = 0.2f;
-    public float deathEffectDuration = 2f;
-    public float hitFlashDuration = 0.1f;
+    public float hitEffectDuration = 0.1f;
+    public float deathEffectDuration = 1f;
+    public float hitFlashDuration = 0.05f;
     public Color hitFlashColor = Color.red;
     private Color originalColor;
     private Renderer enemyRenderer;
@@ -57,7 +57,7 @@ public class EnemyHealthController : MonoBehaviour
     {
         if (isInvincible || isDead) return;
 
-        // Apply damage
+        // Apply damage immediately
         currentHealth -= damage * damageMultiplier;
         Debug.Log($"Enemy took {damage * damageMultiplier} damage. Current health: {currentHealth}");
 

@@ -16,7 +16,6 @@ public class WeaponSwitchController : MonoBehaviour
     {
         Debug.Log("WeaponSwitchController starting...");
         
-        // Get the main camera
         mainCamera = Camera.main;
         if (mainCamera == null)
         {
@@ -24,15 +23,27 @@ public class WeaponSwitchController : MonoBehaviour
             return;
         }
 
-        // Initialize weapon anchors if not set
+        // Robust anchor finding
         if (gunAnchor == null)
         {
             gunAnchor = transform.Find("GunAnchor");
+            if (gunAnchor == null)
+            {
+                var gunAnchorObj = GameObject.Find("GunAnchor");
+                if (gunAnchorObj != null)
+                    gunAnchor = gunAnchorObj.transform;
+            }
             Debug.Log($"Gun anchor found: {gunAnchor != null}");
         }
         if (meleeAnchor == null)
         {
             meleeAnchor = transform.Find("MeleeAnchor");
+            if (meleeAnchor == null)
+            {
+                var meleeAnchorObj = GameObject.Find("MeleeAnchor");
+                if (meleeAnchorObj != null)
+                    meleeAnchor = meleeAnchorObj.transform;
+            }
             Debug.Log($"Melee anchor found: {meleeAnchor != null}");
         }
 
@@ -80,16 +91,7 @@ public class WeaponSwitchController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (mainCamera != null && gunAnchor != null)
-        {
-            // Position the gun anchor relative to the camera's position and rotation
-            gunAnchor.position = mainCamera.transform.position + 
-                mainCamera.transform.right * 0.2f + 
-                mainCamera.transform.up * -1.4f + 
-                mainCamera.transform.forward * 0.5f;
-            
-            gunAnchor.rotation = mainCamera.transform.rotation;
-        }
+        // No need to manually set gunAnchor or meleeAnchor position/rotation if they're children of the arm!
     }
 
     private void Update()
@@ -118,44 +120,47 @@ public class WeaponSwitchController : MonoBehaviour
     public void EquipGun(GameObject newGun)
     {
         Debug.Log($"Equipping gun: {newGun?.name ?? "null"}");
-        
-        // Unequip current gun if exists
-        if (currentGun != null)
-        {
-            currentGun.SetActive(false);
-        }
 
-        // Equip new gun
-        currentGun = newGun;
         if (currentGun != null)
+            currentGun.SetActive(false);
+
+        currentGun = newGun;
+        if (currentGun != null && gunAnchor != null)
         {
-            currentGun.transform.SetParent(gunAnchor);
+            currentGun.transform.SetParent(gunAnchor, false);
+            Debug.Log($"Gun parent after SetParent: {currentGun.transform.parent?.name}");
             currentGun.transform.localPosition = Vector3.zero;
             currentGun.transform.localRotation = Quaternion.identity;
-            currentGun.SetActive(false); // Start inactive
-            Debug.Log($"Gun equipped and active: {currentGun.activeSelf}");
+            currentGun.transform.localScale = Vector3.one;
+            currentGun.SetActive(false);
+            Debug.Log($"Gun equipped and active: {currentGun.activeSelf}, localScale: {currentGun.transform.localScale}, parent: {currentGun.transform.parent?.name}");
+        }
+        else
+        {
+            Debug.LogError("Cannot equip gun: gunAnchor is null!");
         }
     }
 
     public void EquipMelee(GameObject newMelee)
     {
         Debug.Log($"Equipping melee: {newMelee?.name ?? "null"}");
-        
-        // Unequip current melee if exists
-        if (currentMelee != null)
-        {
-            currentMelee.SetActive(false);
-        }
 
-        // Equip new melee weapon
-        currentMelee = newMelee;
         if (currentMelee != null)
+            currentMelee.SetActive(false);
+
+        currentMelee = newMelee;
+        if (currentMelee != null && meleeAnchor != null)
         {
-            currentMelee.transform.SetParent(meleeAnchor);
-            currentMelee.transform.localPosition = Vector3.zero;
+            currentMelee.transform.SetParent(meleeAnchor, false);
+            currentMelee.transform.localPosition = new Vector3(0.0003f, 0f, 0.0002f);
             currentMelee.transform.localRotation = Quaternion.identity;
-            currentMelee.SetActive(true); // Start active
-            Debug.Log($"Melee equipped and active: {currentMelee.activeSelf}");
+            currentMelee.transform.localScale = new Vector3(0.00397f, 0.00397f, 0.00256f);
+            currentMelee.SetActive(true);
+            Debug.Log($"Melee equipped and active: {currentMelee.activeSelf}, localScale: {currentMelee.transform.localScale}");
+        }
+        else
+        {
+            Debug.LogError("Cannot equip melee: meleeAnchor is null!");
         }
     }
 

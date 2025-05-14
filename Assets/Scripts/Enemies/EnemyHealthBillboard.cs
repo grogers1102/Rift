@@ -71,6 +71,7 @@ public class EnemyHealthBillboard : MonoBehaviour
             if (healthSlider != null)
             {
                 healthSlider.value = healthController.currentHealth;
+                Debug.Log($"[WebGL] Health bar set to: {healthSlider.value} (max: {healthSlider.maxValue})");
             }
 
             // Update ease health bar with smooth follow
@@ -85,7 +86,10 @@ public class EnemyHealthBillboard : MonoBehaviour
                 {
                     easeHealthSlider.value = healthController.currentHealth;
                 }
+                Debug.Log($"[WebGL] Ease health bar set to: {easeHealthSlider.value} (max: {easeHealthSlider.maxValue})");
             }
+            // Force UI update after both sliders are set
+            Canvas.ForceUpdateCanvases();
         }
     }
 }
