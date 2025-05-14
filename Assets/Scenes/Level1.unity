@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: b848deb1141d9334ebf428c2b62d2ba2, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -271,7 +271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9122194890592734430, guid: c0d1bcc42a810bd4580b2267da1c6e72, type: 3}
       propertyPath: m_Name
-      value: PatrolWaypoint_2
+      value: PatrolWaypoint_8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -467,7 +467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9122194890592734430, guid: c0d1bcc42a810bd4580b2267da1c6e72, type: 3}
       propertyPath: m_Name
-      value: PatrolWaypoint_1
+      value: PatrolWaypoint_4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -541,7 +541,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9122194890592734430, guid: c0d1bcc42a810bd4580b2267da1c6e72, type: 3}
       propertyPath: m_Name
-      value: PatrolWaypoint_3
+      value: PatrolWaypoint_9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -841,19 +841,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.03429547
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.99941176
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -861,7 +861,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -183.931
       objectReference: {fileID: 0}
     - target: {fileID: 3579468785380965463, guid: 20870e9ca1f1af644887aa2f2c4f1e7d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1437,7 +1437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9122194890592734430, guid: c0d1bcc42a810bd4580b2267da1c6e72, type: 3}
       propertyPath: m_Name
-      value: PatrolWaypoint_3
+      value: PatrolWaypoint_6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1563,7 +1563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9122194890592734430, guid: c0d1bcc42a810bd4580b2267da1c6e72, type: 3}
       propertyPath: m_Name
-      value: PatrolWaypoint_1
+      value: PatrolWaypoint_7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2436,7 +2436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9122194890592734430, guid: c0d1bcc42a810bd4580b2267da1c6e72, type: 3}
       propertyPath: m_Name
-      value: PatrolWaypoint_2
+      value: PatrolWaypoint_5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2801,15 +2801,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6625983276348706909, guid: bb2335ac7295be045a807cc363ac2652, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.01
+      value: -7.26
       objectReference: {fileID: 0}
     - target: {fileID: 6625983276348706909, guid: bb2335ac7295be045a807cc363ac2652, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.1
+      value: -0.78
       objectReference: {fileID: 0}
     - target: {fileID: 6625983276348706909, guid: bb2335ac7295be045a807cc363ac2652, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -60.32
+      value: -61.32
       objectReference: {fileID: 0}
     - target: {fileID: 6625983276348706909, guid: bb2335ac7295be045a807cc363ac2652, type: 3}
       propertyPath: m_LocalRotation.w
