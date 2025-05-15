@@ -10,11 +10,13 @@ public class GunController : BaseWeapon
     public float nextTimeToFire = 0f;
     public int currentAmmo;
     public int currentMagAmmo;
+    public float hitDetectionBuffer = 0.1f; // Added buffer for WebGL hit detection
     private Camera fpsCamera;
     private PlayerStaminaController staminaController;
     private CombatFeedback combatFeedback;
+    private Transform cameraHolder; // Added reference to camera holder
 
-    protected override void Start ()
+    protected override void Start()
     {
         base.Start();
         currentMagAmmo = weaponInfo.magSize;
@@ -22,11 +24,28 @@ public class GunController : BaseWeapon
         staminaController = GetComponent<PlayerStaminaController>();
         combatFeedback = GetComponent<CombatFeedback>();
         
-        // Find the main camera at runtime
-        fpsCamera = Camera.main;
+        // Find the player first
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogError("Player not found! Make sure the player has the 'Player' tag.");
+            return;
+        }
+
+        // Find the camera holder in the player hierarchy
+        cameraHolder = player.transform.Find("CameraHolder");
+        if (cameraHolder == null)
+        {
+            Debug.LogError("CameraHolder not found! Make sure there's a CameraHolder object under the player.");
+            return;
+        }
+
+        // Get the camera component
+        fpsCamera = cameraHolder.GetComponentInChildren<Camera>();
         if (fpsCamera == null)
         {
-            Debug.LogError("Main camera not found! Make sure your camera is tagged as 'MainCamera'");
+            Debug.LogError("Camera not found in CameraHolder! Make sure there's a Camera component in the CameraHolder or its children.");
+            return;
         }
     }
 
@@ -64,20 +83,23 @@ public class GunController : BaseWeapon
             staminaController.OnGunShot();
         }
 
-        // Raycast for hit detection
-        if (fpsCamera != null)
+        // Raycast for hit detection with buffer
+        if (fpsCamera != null && cameraHolder != null)
         {
             RaycastHit hit;
-            Vector3 rayOrigin = fpsCamera.transform.position;
-            Vector3 rayDirection = fpsCamera.transform.forward;
+            Vector3 rayOrigin = cameraHolder.position;
+            Vector3 rayDirection = cameraHolder.forward;
             
-            // Debug visualization
-            Debug.DrawRay(rayOrigin, rayDirection * weaponInfo.range, Color.red, 1f);
+            // Add a small spread to the ray for better WebGL hit detection
+            rayDirection += new Vector3(
+                Random.Range(-hitDetectionBuffer, hitDetectionBuffer),
+                Random.Range(-hitDetectionBuffer, hitDetectionBuffer),
+                Random.Range(-hitDetectionBuffer, hitDetectionBuffer)
+            );
+            rayDirection.Normalize();
             
-            if (Physics.Raycast(rayOrigin, rayDirection, out hit, weaponInfo.range))
+            if (Physics.Raycast(rayOrigin, rayDirection, out hit, weaponInfo.range + hitDetectionBuffer))
             {
-                Debug.Log($"Hit object: {hit.collider.gameObject.name} at distance {hit.distance}");
-                
                 // Show combat feedback
                 if (combatFeedback != null)
                 {
@@ -94,19 +116,21 @@ public class GunController : BaseWeapon
                 EnemyHealthController enemy = hit.transform.GetComponent<EnemyHealthController>();
                 if (enemy != null)
                 {
-                    Debug.Log($"Applying {weaponInfo.bulletDamage} damage to enemy");
                     enemy.TakeDamage(weaponInfo.bulletDamage);
                 }
             }
             else
             {
-                Debug.Log("Shot missed");
-                // Show miss feedback (optional)
+                // Show miss feedback
                 if (combatFeedback != null)
                 {
                     combatFeedback.ShowHitMarker(rayOrigin + rayDirection * weaponInfo.range);
                 }
             }
+        }
+        else
+        {
+            Debug.LogError("FPS Camera or CameraHolder is null!");
         }
 
         // Play weapon-specific fire animation if it exists

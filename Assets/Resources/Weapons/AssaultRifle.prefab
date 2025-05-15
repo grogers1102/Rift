@@ -4993,6 +4993,12 @@ MonoBehaviour:
   nextTimeToFire: 0.5
   currentAmmo: 30
   currentMagAmmo: 0
+  hitDetectionBuffer: 0.1
+  showDebugRays: 1
+  hitRayColor: {r: 1, g: 0, b: 0, a: 1}
+  missRayColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  rayDuration: 5
+  rayWidth: 1
 --- !u!114 &-703442708161235978
 MonoBehaviour:
   m_ObjectHideFlags: 0

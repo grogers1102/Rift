@@ -189,6 +189,13 @@ MonoBehaviour:
   meleeAttackAngle: 60
   meleeRayCount: 5
   meleeCapsuleRadius: 0.5
+  hitDetectionBuffer: 0.1
+  showDebugRays: 1
+  hitRayColor: {r: 1, g: 0, b: 0, a: 1}
+  missRayColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  sphereColor: {r: 0, g: 1, b: 0, a: 1}
+  rayDuration: 5
+  rayWidth: 0.1
   playerController: {fileID: 0}
   combatFeedback: {fileID: 0}
   hitEffect: {fileID: 0}

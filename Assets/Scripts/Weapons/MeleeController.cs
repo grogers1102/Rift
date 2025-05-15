@@ -13,14 +13,16 @@ public class MeleeController : BaseWeapon
     [Header("Raycast Settings")]
     public float meleeAttackRadius = 2f; // Reduced from 5f to 2f for more precise hits
     public float meleeAttackAngle = 60f; // Angle of the melee attack cone
-    public int meleeRayCount = 10; // Number of rays to cast in the cone
+    public int meleeRayCount = 5; // Reduced from 10 to 5 for WebGL performance
     public float meleeCapsuleRadius = 0.5f; // Radius of the capsule cast
+    public float hitDetectionBuffer = 0.1f; // Added buffer for WebGL hit detection
 
     [Header("References")]
     [SerializeField] private PlayerController playerController;
     [SerializeField] private CombatFeedback combatFeedback;
     [SerializeField] private ParticleSystem hitEffect;
     [SerializeField] private Transform attackPoint; // Point from where the raycast will be fired
+    private Transform cameraHolder; // Added reference to camera holder
 
     protected override void Start()
     {
@@ -42,29 +44,33 @@ public class MeleeController : BaseWeapon
             combatFeedback = playerController.GetComponent<CombatFeedback>();
         }
 
+        // Find the camera holder in the player hierarchy
+        if (playerController != null)
+        {
+            Transform playerTransform = playerController.transform;
+            while (playerTransform != null)
+            {
+                if (playerTransform.name == "CameraHolder")
+                {
+                    cameraHolder = playerTransform;
+                    break;
+                }
+                playerTransform = playerTransform.parent;
+            }
+        }
+
         // Set attack point to camera if not assigned
         if (attackPoint == null)
         {
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
+            if (cameraHolder != null)
             {
-                attackPoint = mainCamera.transform;
+                attackPoint = cameraHolder;
             }
             else
             {
                 attackPoint = transform;
+                Debug.LogWarning("CameraHolder not found, using transform as attack point");
             }
-        }
-
-        // Debug layer setup
-        Debug.Log($"Melee attack enemy layer: {enemyLayer.value}");
-        Debug.Log($"Layer 'Enemies' index: {LayerMask.NameToLayer("Enemies")}");
-        Debug.Log($"Layer 'Enemies' mask value: {1 << LayerMask.NameToLayer("Enemies")}");
-        
-        // Verify the layer mask is set correctly
-        if (enemyLayer != (1 << LayerMask.NameToLayer("Enemies")))
-        {
-            Debug.LogWarning("Enemy layer mask might not be set correctly! Please check the layer mask in the inspector.");
         }
     }
 
@@ -144,22 +150,20 @@ public class MeleeController : BaseWeapon
                 playerController.animator.SetBool("canCombo", false);
             }
             // Perform the raycast attack
-            PerformRaycastAttack();
+            PerformMeleeAttack();
         }
     }
 
-    private void PerformRaycastAttack()
+    private void PerformMeleeAttack()
     {        
-        Debug.Log("Starting melee attack raycast");
+        // First, check for enemies in range using OverlapSphere with buffer
+        Collider[] hitColliders = Physics.OverlapSphere(attackPoint.position, meleeAttackRadius + hitDetectionBuffer, enemyLayer);
         
-        // First, check for enemies in range using OverlapSphere
-        Collider[] hitColliders = Physics.OverlapSphere(attackPoint.position, meleeAttackRadius, enemyLayer);
         foreach (Collider hitCollider in hitColliders)
         {
             EnemyHealthController enemy = hitCollider.GetComponent<EnemyHealthController>();
             if (enemy != null)
             {
-                Debug.Log($"Found enemy in range: {hitCollider.gameObject.name}");
                 enemy.TakeDamage(weaponInfo.meleeDamage);
                 
                 // Show combat feedback at hit point
@@ -178,48 +182,39 @@ public class MeleeController : BaseWeapon
             }
         }
         
-        // If no enemies found in range, proceed with raycast as before
+        // If no enemies found in range, proceed with simplified raycast
         float angleStep = meleeAttackAngle / (meleeRayCount - 1);
         float startAngle = -meleeAttackAngle / 2f;
         
-        // Get the forward direction from the attack point
-        Vector3 forward = attackPoint.forward;
+        // Get the forward direction from the camera
+        Vector3 forward = cameraHolder != null ? cameraHolder.forward : attackPoint.forward;
         
-        // Adjust attack point to be in front of the player
-        Vector3 attackPosition = attackPoint.position + forward * 1f; // Move 1 unit forward from camera
-        Debug.Log($"Attack direction: {forward}, Position: {attackPosition}, Attack radius: {meleeAttackRadius}");
+        // Adjust attack point to be in front of the player with buffer
+        Vector3 attackPosition = attackPoint.position + forward * (1f + hitDetectionBuffer);
         
-        // Cast multiple capsule casts in a cone pattern
+        // Cast fewer rays in a cone pattern
         for (int i = 0; i < meleeRayCount; i++)
         {
             float currentAngle = startAngle + (angleStep * i);
             Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
             
-            // Calculate capsule points (slightly above and below the center)
-            Vector3 point1 = attackPosition + Vector3.up * meleeCapsuleRadius;
-            Vector3 point2 = attackPosition - Vector3.up * meleeCapsuleRadius;
+            // Calculate capsule points with buffer
+            Vector3 point1 = attackPosition + Vector3.up * (meleeCapsuleRadius + hitDetectionBuffer);
+            Vector3 point2 = attackPosition - Vector3.up * (meleeCapsuleRadius + hitDetectionBuffer);
             
-            // Cast the capsule
+            // Cast the capsule with buffer
             RaycastHit hit;
-            Debug.DrawRay(attackPosition, direction * meleeAttackRadius, Color.yellow, 2f);
-
-            if (Physics.CapsuleCast(point1, point2, meleeCapsuleRadius, direction, out hit, meleeAttackRadius, enemyLayer))
+            if (Physics.CapsuleCast(point1, point2, meleeCapsuleRadius + hitDetectionBuffer, direction, out hit, meleeAttackRadius + hitDetectionBuffer, enemyLayer))
             {
-                Debug.DrawRay(attackPosition, direction * hit.distance, Color.red, 2f);
-                Debug.Log($"Ray {i} hit something at distance {hit.distance}. Hit object: {hit.collider.gameObject.name}");
-                
                 EnemyHealthController enemy = hit.collider.GetComponent<EnemyHealthController>();
                 if (enemy != null)
                 {
-                    Debug.Log($"Found EnemyHealthController on hit object. Current health: {enemy.currentHealth}");
-                    
                     if (combatFeedback != null)
                     {
                         combatFeedback.ShowHitMarker(hit.point);
                     }
 
                     enemy.TakeDamage(weaponInfo.meleeDamage);
-                    Debug.Log($"Applied {weaponInfo.meleeDamage} damage to enemy. New health: {enemy.currentHealth}");
 
                     if (hitEffect != null)
                     {

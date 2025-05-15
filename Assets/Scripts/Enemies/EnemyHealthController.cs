@@ -59,8 +59,6 @@ public class EnemyHealthController : MonoBehaviour
 
         // Apply damage immediately
         currentHealth -= damage * damageMultiplier;
-        Debug.Log($"Enemy took {damage * damageMultiplier} damage. Current health: {currentHealth}");
-
         // Visual feedback
         if (hitEffect != null)
         {
